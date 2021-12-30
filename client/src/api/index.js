@@ -6,10 +6,12 @@ import projects from './projects';
 import projectManagers from './project-managers';
 import boards from './boards';
 import boardMemberships from './board-memberships';
+import punctuations from './punctuations';
 import labels from './labels';
 import lists from './lists';
 import cards from './cards';
 import cardMemberships from './card-memberships';
+import cardPunctuations from './card-punctuations';
 import cardLabels from './card-labels';
 import tasks from './tasks';
 import attachments from './attachments';
@@ -26,10 +28,12 @@ export default {
   ...projectManagers,
   ...boards,
   ...boardMemberships,
+  ...punctuations,
   ...labels,
   ...lists,
   ...cards,
   ...cardMemberships,
+  ...cardPunctuations,
   ...cardLabels,
   ...tasks,
   ...attachments,
