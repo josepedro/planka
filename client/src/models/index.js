@@ -4,6 +4,7 @@ import ProjectManager from './ProjectManager';
 import Board from './Board';
 import BoardMembership from './BoardMembership';
 import Label from './Label';
+import Punctuation from './Punctuation';
 import List from './List';
 import Card from './Card';
 import Task from './Task';
@@ -18,6 +19,7 @@ export {
   Board,
   BoardMembership,
   Label,
+  Punctuation,
   List,
   Card,
   Task,

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Model, attr, fk } from 'redux-orm';
 
 import ActionTypes from '../constants/ActionTypes';
@@ -88,6 +89,7 @@ export default class extends Model {
 
     const filterUserIds = this.board.filterUsers.toRefArray().map((user) => user.id);
     const filterLabelIds = this.board.filterLabels.toRefArray().map((label) => label.id);
+    const filterPunctuationIds = this.board.filterPunctuations.toRefArray().map((punctuation) => punctuation.id);
 
     if (filterUserIds.length > 0) {
       cardModels = cardModels.filter((cardModel) => {
@@ -102,6 +104,14 @@ export default class extends Model {
         const labels = cardModel.labels.toRefArray();
 
         return labels.some((label) => filterLabelIds.includes(label.id));
+      });
+    }
+
+    if (filterPunctuationIds.length > 0) {
+      cardModels = cardModels.filter((cardModel) => {
+        const punctuations = cardModel.punctuations.toRefArray();
+
+        return punctuations.some((punctuation) => filterPunctuationIds.includes(punctuation.id));
       });
     }
 

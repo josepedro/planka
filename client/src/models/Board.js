@@ -25,6 +25,7 @@ export default class extends Model {
     }),
     filterUsers: many('User', 'filterBoards'),
     filterLabels: many('Label', 'filterBoards'),
+    filterPunctuations: many('Punctuation', 'filterPunctuations'),
   };
 
   static reducer({ type, payload }, Board) {
@@ -163,6 +164,14 @@ export default class extends Model {
         Board.withId(payload.boardId).filterLabels.remove(payload.id);
 
         break;
+      case ActionTypes.PUNCTUATION_TO_BOARD_FILTER_ADD:
+        Board.withId(payload.boardId).filterPunctuations.add(payload.id);
+
+        break;
+      case ActionTypes.PUNCTUATION_FROM_BOARD_FILTER_REMOVE:
+        Board.withId(payload.boardId).filterPunctuations.remove(payload.id);
+
+        break;
       default:
     }
   }
@@ -191,6 +200,7 @@ export default class extends Model {
     });
 
     this.labels.delete();
+    this.punctuations.delete();
 
     this.lists.toModelArray().forEach((listModel) => {
       listModel.deleteWithRelated();

@@ -39,6 +39,7 @@ export default class extends Model {
     }),
     users: many('User', 'cards'),
     labels: many('Label', 'cards'),
+    punctuations: many('Punctuation', 'cards'),
   };
 
   static reducer({ type, payload }, Card) {
@@ -65,6 +66,12 @@ export default class extends Model {
           });
         }
 
+        if (payload.cardPunctuations) {
+          payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
+            Card.withId(cardId).punctuations.add(punctuationId);
+          });
+        }
+
         break;
       case ActionTypes.SOCKET_RECONNECT_HANDLE:
         Card.all().delete();
@@ -84,6 +91,12 @@ export default class extends Model {
         if (payload.cardLabels) {
           payload.cardLabels.forEach(({ cardId, labelId }) => {
             Card.withId(cardId).labels.add(labelId);
+          });
+        }
+
+        if (payload.cardPunctuations) {
+          payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
+            Card.withId(cardId).punctuations.add(punctuationId);
           });
         }
 
@@ -129,9 +142,17 @@ export default class extends Model {
           Card.withId(cardId).labels.add(labelId);
         });
 
+        payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
+          Card.withId(cardId).punctuations.add(punctuationId);
+        });
+
         break;
       case ActionTypes.LABEL_TO_CARD_ADD:
         Card.withId(payload.cardId).labels.add(payload.id);
+
+        break;
+      case ActionTypes.PUNCTUATION_TO_CARD_ADD:
+        Card.withId(payload.cardId).punctuations.add(payload.id);
 
         break;
       case ActionTypes.LABEL_TO_CARD_ADD__SUCCESS:
@@ -141,8 +162,20 @@ export default class extends Model {
         } catch {} // eslint-disable-line no-empty
 
         break;
+      case ActionTypes.PUNCTUATION_TO_CARD_ADD__SUCCESS:
+      case ActionTypes.PUNCTUATION_TO_CARD_ADD_HANDLE:
+        try {
+          // eslint-disable-next-line prettier/prettier
+          Card.withId(payload.cardPunctuation.cardId).punctuations.add(payload.cardPunctuation.punctuationId);
+        } catch {} // eslint-disable-line no-empty
+
+        break;
       case ActionTypes.LABEL_FROM_CARD_REMOVE:
         Card.withId(payload.cardId).labels.remove(payload.id);
+
+        break;
+      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE:
+        Card.withId(payload.cardId).punctuations.remove(payload.id);
 
         break;
       case ActionTypes.LABEL_FROM_CARD_REMOVE__SUCCESS:
@@ -150,6 +183,15 @@ export default class extends Model {
         try {
           Card.withId(payload.cardLabel.cardId).labels.remove(payload.cardLabel.labelId);
         } catch {} // eslint-disable-line no-empty
+
+        break;
+      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE__SUCCESS:
+      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE_HANDLE:
+        try {
+          // eslint-disable-next-line prettier/prettier
+          Card.withId(payload.cardPunctuation.cardId).punctuations.remove(payload.cardPunctuation.punctuationId);
+          // eslint-disable-next-line no-empty
+        } catch {}
 
         break;
       case ActionTypes.CARD_CREATE:
