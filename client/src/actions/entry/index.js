@@ -8,6 +8,7 @@ export * from './project-manager';
 export * from './board';
 export * from './board-membership';
 export * from './label';
+export * from './punctuation';
 export * from './list';
 export * from './card';
 export * from './task';
