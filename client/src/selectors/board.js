@@ -90,6 +90,27 @@ export const labelsForCurrentBoardSelector = createSelector(
   },
 );
 
+export const punctuationsForCurrentBoardSelector = createSelector(
+  orm,
+  (state) => pathSelector(state).boardId,
+  ({ Board }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const boardModel = Board.withId(id);
+
+    if (!boardModel) {
+      return boardModel;
+    }
+
+    return boardModel.punctuations.toRefArray().map((punctuation) => ({
+      ...punctuation,
+      isPersisted: !isLocalId(punctuation.id),
+    }));
+  },
+);
+
 export const listIdsForCurrentBoardSelector = createSelector(
   orm,
   (state) => pathSelector(state).boardId,
@@ -144,6 +165,24 @@ export const filterLabelsForCurrentBoardSelector = createSelector(
     }
 
     return boardModel.filterLabels.toRefArray();
+  },
+);
+
+export const filterPunctuationsForCurrentBoardSelector = createSelector(
+  orm,
+  (state) => pathSelector(state).boardId,
+  ({ Board }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const boardModel = Board.withId(id);
+
+    if (!boardModel) {
+      return boardModel;
+    }
+
+    return boardModel.filterPunctuations.toRefArray();
   },
 );
 

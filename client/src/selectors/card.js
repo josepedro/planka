@@ -60,6 +60,23 @@ export const makeLabelsByCardIdSelector = () =>
 
 export const labelsByCardIdSelector = makeLabelsByCardIdSelector();
 
+export const makePunctuationsByCardIdSelector = () =>
+  createSelector(
+    orm,
+    (_, id) => id,
+    ({ Card }, id) => {
+      const cardModel = Card.withId(id);
+
+      if (!cardModel) {
+        return cardModel;
+      }
+
+      return cardModel.punctuations.toRefArray();
+    },
+  );
+
+export const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
+
 export const makeTasksByCardIdSelector = () =>
   createSelector(
     orm,
@@ -181,6 +198,24 @@ export const labelsForCurrentCardSelector = createSelector(
     }
 
     return cardModel.labels.toRefArray();
+  },
+);
+
+export const punctuationsForCurrentCardSelector = createSelector(
+  orm,
+  (state) => pathSelector(state).cardId,
+  ({ Card }, id) => {
+    if (!id) {
+      return id;
+    }
+
+    const cardModel = Card.withId(id);
+
+    if (!cardModel) {
+      return cardModel;
+    }
+
+    return cardModel.punctuations.toRefArray();
   },
 );
 
