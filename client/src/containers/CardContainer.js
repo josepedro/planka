@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import {
   isCurrentUserMemberForCurrentBoardSelector,
   labelsForCurrentBoardSelector,
+  punctuationsForCurrentBoardSelector,
   makeCardByIdSelector,
+  makePunctuationsByCardIdSelector,
   makeLabelsByCardIdSelector,
   makeNotificationsTotalByCardIdSelector,
   makeTasksByCardIdSelector,
@@ -14,16 +16,21 @@ import {
   projectsToListsForCurrentUserSelector,
 } from '../selectors';
 import {
+  addPunctuationToCard,
   addLabelToCard,
   addUserToCard,
+  createPunctuationInCurrentBoard,
   createLabelInCurrentBoard,
   deleteCard,
+  deletePunctuation,
   deleteLabel,
   fetchBoard,
   moveCard,
+  removePunctuationFromCard,
   removeLabelFromCard,
   removeUserFromCard,
   transferCard,
+  updatePunctuation,
   updateLabel,
   updateCard,
 } from '../actions/entry';
@@ -32,6 +39,7 @@ import Card from '../components/Card';
 const makeMapStateToProps = () => {
   const cardByIdSelector = makeCardByIdSelector();
   const usersByCardIdSelector = makeUsersByCardIdSelector();
+  const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
   const labelsByCardIdSelector = makeLabelsByCardIdSelector();
   const tasksByCardIdSelector = makeTasksByCardIdSelector();
   const notificationsTotalByCardIdSelector = makeNotificationsTotalByCardIdSelector();
@@ -40,6 +48,7 @@ const makeMapStateToProps = () => {
     const { projectId } = pathSelector(state);
     const allProjectsToLists = projectsToListsForCurrentUserSelector(state);
     const allBoardMemberships = membershipsForCurrentBoardSelector(state);
+    const allPunctuations = punctuationsForCurrentBoardSelector(state);
     const allLabels = labelsForCurrentBoardSelector(state);
     const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
 
@@ -49,6 +58,7 @@ const makeMapStateToProps = () => {
     );
 
     const users = usersByCardIdSelector(state, id);
+    const punctuations = punctuationsByCardIdSelector(state, id);
     const labels = labelsByCardIdSelector(state, id);
     const tasks = tasksByCardIdSelector(state, id);
     const notificationsTotal = notificationsTotalByCardIdSelector(state, id);
@@ -66,10 +76,12 @@ const makeMapStateToProps = () => {
       isPersisted,
       notificationsTotal,
       users,
+      punctuations,
       labels,
       tasks,
       allProjectsToLists,
       allBoardMemberships,
+      allPunctuations,
       allLabels,
       canEdit: isCurrentUserMember,
     };
@@ -86,6 +98,11 @@ const mapDispatchToProps = (dispatch, { id }) =>
       onUserAdd: (userId) => addUserToCard(userId, id),
       onUserRemove: (userId) => removeUserFromCard(userId, id),
       onBoardFetch: fetchBoard,
+      onPunctuationAdd: (punctuationId) => addPunctuationToCard(punctuationId, id),
+      onPunctuationRemove: (punctuationId) => removePunctuationFromCard(punctuationId, id),
+      onPunctuationCreate: (data) => createPunctuationInCurrentBoard(data),
+      onPunctuationUpdate: (punctuationId, data) => updatePunctuation(punctuationId, data),
+      onPunctuationDelete: (punctuationId) => deletePunctuation(punctuationId),
       onLabelAdd: (labelId) => addLabelToCard(labelId, id),
       onLabelRemove: (labelId) => removeLabelFromCard(labelId, id),
       onLabelCreate: (data) => createLabelInCurrentBoard(data),
