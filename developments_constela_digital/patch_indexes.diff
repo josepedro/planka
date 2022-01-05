@@ -1,0 +1,24 @@
+diff --git a/client/src/actions/entry/index.js b/client/src/actions/entry/index.js
+index 56339dc..50ef5ec 100755
+--- a/client/src/actions/entry/index.js
++++ b/client/src/actions/entry/index.js
+@@ -8,6 +8,7 @@ export * from './project-manager';
+ export * from './board';
+ export * from './board-membership';
+ export * from './label';
++export * from './punctuation';
+ export * from './list';
+ export * from './card';
+ export * from './task';
+diff --git a/client/src/actions/index.js b/client/src/actions/index.js
+index 161add4..b823803 100644
+--- a/client/src/actions/index.js
++++ b/client/src/actions/index.js
+@@ -9,6 +9,7 @@ export * from './project-manager';
+ export * from './board';
+ export * from './board-membership';
+ export * from './label';
++export * from './punctuation';
+ export * from './list';
+ export * from './card';
+ export * from './task';

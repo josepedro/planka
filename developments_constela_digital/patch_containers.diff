@@ -1,0 +1,235 @@
+diff --git a/client/src/containers/BoardActionsContainer.js b/client/src/containers/BoardActionsContainer.js
+index 9ede5ca..c7ec638 100644
+--- a/client/src/containers/BoardActionsContainer.js
++++ b/client/src/containers/BoardActionsContainer.js
+@@ -3,21 +3,28 @@ import { connect } from 'react-redux';
+ 
+ import {
+   filterLabelsForCurrentBoardSelector,
++  filterPunctuationsForCurrentBoardSelector,
+   filterUsersForCurrentBoardSelector,
+   isCurrentUserManagerForCurrentProjectSelector,
+   labelsForCurrentBoardSelector,
+   membershipsForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
+   usersSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToFilterInCurrentBoard,
+   addLabelToFilterInCurrentBoard,
+   addUserToFilterInCurrentBoard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   createMembershipInCurrentBoard,
+   deleteBoardMembership,
++  deletePunctuation,
+   deleteLabel,
++  removePunctuationFromFilterInCurrentBoard,
+   removeLabelFromFilterInCurrentBoard,
+   removeUserFromFilterInCurrentBoard,
++  updatePunctuation,
+   updateLabel,
+ } from '../actions/entry';
+ import BoardActions from '../components/BoardActions';
+@@ -27,13 +34,17 @@ const mapStateToProps = (state) => {
+   const isCurrentUserManager = isCurrentUserManagerForCurrentProjectSelector(state);
+   const memberships = membershipsForCurrentBoardSelector(state);
+   const labels = labelsForCurrentBoardSelector(state);
++  const punctuations = punctuationsForCurrentBoardSelector(state);
+   const filterUsers = filterUsersForCurrentBoardSelector(state);
+   const filterLabels = filterLabelsForCurrentBoardSelector(state);
++  const filterPunctuations = filterPunctuationsForCurrentBoardSelector(state);
+ 
+   return {
+     memberships,
+     labels,
++    punctuations,
+     filterUsers,
++    filterPunctuations,
+     filterLabels,
+     allUsers,
+     canEditMemberships: isCurrentUserManager,
+@@ -47,6 +58,11 @@ const mapDispatchToProps = (dispatch) =>
+       onMembershipDelete: deleteBoardMembership,
+       onUserToFilterAdd: addUserToFilterInCurrentBoard,
+       onUserFromFilterRemove: removeUserFromFilterInCurrentBoard,
++      onPunctuationToFilterAdd: addPunctuationToFilterInCurrentBoard,
++      onPunctuationFromFilterRemove: removePunctuationFromFilterInCurrentBoard,
++      onPunctuationCreate: createPunctuationInCurrentBoard,
++      onPunctuationUpdate: updatePunctuation,
++      onPunctuationDelete: deletePunctuation,
+       onLabelToFilterAdd: addLabelToFilterInCurrentBoard,
+       onLabelFromFilterRemove: removeLabelFromFilterInCurrentBoard,
+       onLabelCreate: createLabelInCurrentBoard,
+diff --git a/client/src/containers/CardContainer.js b/client/src/containers/CardContainer.js
+index 09a93cc..b227671 100755
+--- a/client/src/containers/CardContainer.js
++++ b/client/src/containers/CardContainer.js
+@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
+ import {
+   isCurrentUserMemberForCurrentBoardSelector,
+   labelsForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
+   makeCardByIdSelector,
++  makePunctuationsByCardIdSelector,
+   makeLabelsByCardIdSelector,
+   makeNotificationsTotalByCardIdSelector,
+   makeTasksByCardIdSelector,
+@@ -14,16 +16,21 @@ import {
+   projectsToListsForCurrentUserSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToCard,
+   addLabelToCard,
+   addUserToCard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   deleteCard,
++  deletePunctuation,
+   deleteLabel,
+   fetchBoard,
+   moveCard,
++  removePunctuationFromCard,
+   removeLabelFromCard,
+   removeUserFromCard,
+   transferCard,
++  updatePunctuation,
+   updateLabel,
+   updateCard,
+ } from '../actions/entry';
+@@ -32,6 +39,7 @@ import Card from '../components/Card';
+ const makeMapStateToProps = () => {
+   const cardByIdSelector = makeCardByIdSelector();
+   const usersByCardIdSelector = makeUsersByCardIdSelector();
++  const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
+   const labelsByCardIdSelector = makeLabelsByCardIdSelector();
+   const tasksByCardIdSelector = makeTasksByCardIdSelector();
+   const notificationsTotalByCardIdSelector = makeNotificationsTotalByCardIdSelector();
+@@ -40,6 +48,7 @@ const makeMapStateToProps = () => {
+     const { projectId } = pathSelector(state);
+     const allProjectsToLists = projectsToListsForCurrentUserSelector(state);
+     const allBoardMemberships = membershipsForCurrentBoardSelector(state);
++    const allPunctuations = punctuationsForCurrentBoardSelector(state);
+     const allLabels = labelsForCurrentBoardSelector(state);
+     const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
+ 
+@@ -49,6 +58,7 @@ const makeMapStateToProps = () => {
+     );
+ 
+     const users = usersByCardIdSelector(state, id);
++    const punctuations = punctuationsByCardIdSelector(state, id);
+     const labels = labelsByCardIdSelector(state, id);
+     const tasks = tasksByCardIdSelector(state, id);
+     const notificationsTotal = notificationsTotalByCardIdSelector(state, id);
+@@ -66,10 +76,12 @@ const makeMapStateToProps = () => {
+       isPersisted,
+       notificationsTotal,
+       users,
++      punctuations,
+       labels,
+       tasks,
+       allProjectsToLists,
+       allBoardMemberships,
++      allPunctuations,
+       allLabels,
+       canEdit: isCurrentUserMember,
+     };
+@@ -86,6 +98,11 @@ const mapDispatchToProps = (dispatch, { id }) =>
+       onUserAdd: (userId) => addUserToCard(userId, id),
+       onUserRemove: (userId) => removeUserFromCard(userId, id),
+       onBoardFetch: fetchBoard,
++      onPunctuationAdd: (punctuationId) => addPunctuationToCard(punctuationId, id),
++      onPunctuationRemove: (punctuationId) => removePunctuationFromCard(punctuationId, id),
++      onPunctuationCreate: (data) => createPunctuationInCurrentBoard(data),
++      onPunctuationUpdate: (punctuationId, data) => updatePunctuation(punctuationId, data),
++      onPunctuationDelete: (punctuationId) => deletePunctuation(punctuationId),
+       onLabelAdd: (labelId) => addLabelToCard(labelId, id),
+       onLabelRemove: (labelId) => removeLabelFromCard(labelId, id),
+       onLabelCreate: (data) => createLabelInCurrentBoard(data),
+diff --git a/client/src/containers/CardModalContainer.js b/client/src/containers/CardModalContainer.js
+index 57bb77f..2db0a93 100755
+--- a/client/src/containers/CardModalContainer.js
++++ b/client/src/containers/CardModalContainer.js
+@@ -9,6 +9,8 @@ import {
+   currentCardSelector,
+   isCurrentUserManagerForCurrentProjectSelector,
+   isCurrentUserMemberForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
++  punctuationsForCurrentCardSelector,
+   labelsForCurrentBoardSelector,
+   labelsForCurrentCardSelector,
+   membershipsForCurrentBoardSelector,
+@@ -18,26 +20,31 @@ import {
+   usersForCurrentCardSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToCurrentCard,
+   addLabelToCurrentCard,
+   addUserToCurrentCard,
+   createAttachmentInCurrentCard,
+   createCommentActionInCurrentCard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   createTaskInCurrentCard,
+   deleteAttachment,
+   deleteCommentAction,
+   deleteCurrentCard,
++  deletePunctuation,
+   deleteLabel,
+   deleteTask,
+   fetchActionsInCurrentCard,
+   fetchBoard,
+   moveCurrentCard,
++  removePunctuationFromCurrentCard,
+   removeLabelFromCurrentCard,
+   removeUserFromCurrentCard,
+   transferCurrentCard,
+   updateAttachment,
+   updateCommentAction,
+   updateCurrentCard,
++  updatePunctuation,
+   updateLabel,
+   updateTask,
+ } from '../actions/entry';
+@@ -49,6 +56,7 @@ const mapStateToProps = (state) => {
+   const allProjectsToLists = projectsToListsForCurrentUserSelector(state);
+   const isCurrentUserManager = isCurrentUserManagerForCurrentProjectSelector(state);
+   const allBoardMemberships = membershipsForCurrentBoardSelector(state);
++  const allPunctuations = punctuationsForCurrentBoardSelector(state);
+   const allLabels = labelsForCurrentBoardSelector(state);
+   const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
+ 
+@@ -66,6 +74,7 @@ const mapStateToProps = (state) => {
+ 
+   const users = usersForCurrentCardSelector(state);
+   const labels = labelsForCurrentCardSelector(state);
++  const punctuations = punctuationsForCurrentCardSelector(state);
+   const tasks = tasksForCurrentCardSelector(state);
+   const attachments = attachmentsForCurrentCardSelector(state);
+   const actions = actionsForCurrentCardSelector(state);
+@@ -83,11 +92,13 @@ const mapStateToProps = (state) => {
+     projectId,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     attachments,
+     actions,
+     allProjectsToLists,
+     allBoardMemberships,
++    allPunctuations,
+     allLabels,
+     canEdit: isCurrentUserMember,
+     canEditAllCommentActions: isCurrentUserManager,
+@@ -104,6 +115,11 @@ const mapDispatchToProps = (dispatch) =>
+       onUserAdd: addUserToCurrentCard,
+       onUserRemove: removeUserFromCurrentCard,
+       onBoardFetch: fetchBoard,
++      onPunctuationAdd: addPunctuationToCurrentCard,
++      onPunctuationRemove: removePunctuationFromCurrentCard,
++      onPunctuationCreate: createPunctuationInCurrentBoard,
++      onPunctuationUpdate: updatePunctuation,
++      onPunctuationDelete: deletePunctuation,
+       onLabelAdd: addLabelToCurrentCard,
+       onLabelRemove: removeLabelFromCurrentCard,
+       onLabelCreate: createLabelInCurrentBoard,

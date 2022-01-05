@@ -9,6 +9,7 @@ import { Popup } from '../../lib/custom-ui';
 import { useSteps } from '../../hooks';
 import BoardMembershipsStep from '../BoardMembershipsStep';
 import LabelsStep from '../LabelsStep';
+import PunctuationsStep from '../PunctuationsStep';
 import DueDateEditStep from '../DueDateEditStep';
 import TimerEditStep from '../TimerEditStep';
 import CardMoveStep from '../CardMoveStep';
@@ -18,6 +19,7 @@ import styles from './ActionsPopup.module.scss';
 
 const StepTypes = {
   USERS: 'USERS',
+  PUNCTUATIONS: 'PUNCTUATIONS',
   LABELS: 'LABELS',
   EDIT_DUE_DATE: 'EDIT_DUE_DATE',
   EDIT_TIMER: 'EDIT_TIMER',
@@ -31,7 +33,9 @@ const ActionsStep = React.memo(
     projectsToLists,
     boardMemberships,
     currentUserIds,
+    punctuations,
     labels,
+    currentPunctuationIds,
     currentLabelIds,
     onNameEdit,
     onUpdate,
@@ -41,6 +45,11 @@ const ActionsStep = React.memo(
     onUserAdd,
     onUserRemove,
     onBoardFetch,
+    onPunctuationAdd,
+    onPunctuationRemove,
+    onPunctuationCreate,
+    onPunctuationUpdate,
+    onPunctuationDelete,
     onLabelAdd,
     onLabelRemove,
     onLabelCreate,
@@ -58,6 +67,10 @@ const ActionsStep = React.memo(
 
     const handleUsersClick = useCallback(() => {
       openStep(StepTypes.USERS);
+    }, [openStep]);
+
+    const handlePunctuationsClick = useCallback(() => {
+      openStep(StepTypes.PUNCTUATIONS);
     }, [openStep]);
 
     const handleLabelsClick = useCallback(() => {
@@ -107,6 +120,19 @@ const ActionsStep = React.memo(
               currentUserIds={currentUserIds}
               onUserSelect={onUserAdd}
               onUserDeselect={onUserRemove}
+              onBack={handleBack}
+            />
+          );
+        case StepTypes.PUNCTUATIONS:
+          return (
+            <PunctuationsStep
+              items={punctuations}
+              currentIds={currentPunctuationIds}
+              onSelect={onPunctuationAdd}
+              onDeselect={onPunctuationRemove}
+              onCreate={onPunctuationCreate}
+              onUpdate={onPunctuationUpdate}
+              onDelete={onPunctuationDelete}
               onBack={handleBack}
             />
           );
@@ -188,6 +214,11 @@ const ActionsStep = React.memo(
                 context: 'title',
               })}
             </Menu.Item>
+            <Menu.Item className={styles.menuItem} onClick={handlePunctuationsClick}>
+              {t('common.punctuations', {
+                context: 'title',
+              })}
+            </Menu.Item>
             <Menu.Item className={styles.menuItem} onClick={handleLabelsClick}>
               {t('common.labels', {
                 context: 'title',
@@ -226,6 +257,8 @@ ActionsStep.propTypes = {
   projectsToLists: PropTypes.array.isRequired,
   boardMemberships: PropTypes.array.isRequired,
   currentUserIds: PropTypes.array.isRequired,
+  punctuations: PropTypes.array.isRequired,
+  currentPunctuationIds: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired,
   currentLabelIds: PropTypes.array.isRequired,
   /* eslint-enable react/forbid-prop-types */
@@ -237,6 +270,11 @@ ActionsStep.propTypes = {
   onUserAdd: PropTypes.func.isRequired,
   onUserRemove: PropTypes.func.isRequired,
   onBoardFetch: PropTypes.func.isRequired,
+  onPunctuationAdd: PropTypes.func.isRequired,
+  onPunctuationRemove: PropTypes.func.isRequired,
+  onPunctuationCreate: PropTypes.func.isRequired,
+  onPunctuationUpdate: PropTypes.func.isRequired,
+  onPunctuationDelete: PropTypes.func.isRequired,
   onLabelAdd: PropTypes.func.isRequired,
   onLabelRemove: PropTypes.func.isRequired,
   onLabelCreate: PropTypes.func.isRequired,

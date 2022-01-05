@@ -1,0 +1,2664 @@
+diff --git a/client/src/actions/board-membership.js b/client/src/actions/board-membership.js
+index c6b2a56..44af177 100644
+--- a/client/src/actions/board-membership.js
++++ b/client/src/actions/board-membership.js
+@@ -31,10 +31,12 @@ export const handleBoardMembershipCreate = (
+   projectManagers,
+   boards,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -48,10 +50,12 @@ export const handleBoardMembershipCreate = (
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/actions/board.js b/client/src/actions/board.js
+index 23e336f..1124285 100644
+--- a/client/src/actions/board.js
++++ b/client/src/actions/board.js
+@@ -43,10 +43,12 @@ fetchBoard.success = (
+   users,
+   projects,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -57,10 +59,12 @@ fetchBoard.success = (
+     users,
+     projects,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/actions/core.js b/client/src/actions/core.js
+index b81f176..65655b4 100644
+--- a/client/src/actions/core.js
++++ b/client/src/actions/core.js
+@@ -9,10 +9,12 @@ export const initializeCore = (
+   projectManagers,
+   boards,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -28,10 +30,12 @@ export const initializeCore = (
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/actions/entry/index.js b/client/src/actions/entry/index.js
+index 56339dc..50ef5ec 100755
+--- a/client/src/actions/entry/index.js
++++ b/client/src/actions/entry/index.js
+@@ -8,6 +8,7 @@ export * from './project-manager';
+ export * from './board';
+ export * from './board-membership';
+ export * from './label';
++export * from './punctuation';
+ export * from './list';
+ export * from './card';
+ export * from './task';
+diff --git a/client/src/actions/index.js b/client/src/actions/index.js
+index 161add4..b823803 100644
+--- a/client/src/actions/index.js
++++ b/client/src/actions/index.js
+@@ -9,6 +9,7 @@ export * from './project-manager';
+ export * from './board';
+ export * from './board-membership';
+ export * from './label';
++export * from './punctuation';
+ export * from './list';
+ export * from './card';
+ export * from './task';
+diff --git a/client/src/actions/project-manager.js b/client/src/actions/project-manager.js
+index 32e8125..7de9a2c 100644
+--- a/client/src/actions/project-manager.js
++++ b/client/src/actions/project-manager.js
+@@ -31,10 +31,12 @@ export const handleProjectManagerCreate = (
+   projectManagers,
+   boards,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -48,10 +50,12 @@ export const handleProjectManagerCreate = (
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/actions/router.js b/client/src/actions/router.js
+index 27fead8..2cc5107 100644
+--- a/client/src/actions/router.js
++++ b/client/src/actions/router.js
+@@ -6,10 +6,12 @@ export const handleLocationChange = (
+   users,
+   projects,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -21,10 +23,12 @@ export const handleLocationChange = (
+     users,
+     projects,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/actions/socket.js b/client/src/actions/socket.js
+index de6d42b..eacdce7 100644
+--- a/client/src/actions/socket.js
++++ b/client/src/actions/socket.js
+@@ -13,10 +13,12 @@ export const handleSocketReconnect = (
+   projectManagers,
+   boards,
+   boardMemberships,
++  punctuations,
+   labels,
+   lists,
+   cards,
+   cardMemberships,
++  cardPunctuations,
+   cardLabels,
+   tasks,
+   attachments,
+@@ -32,10 +34,12 @@ export const handleSocketReconnect = (
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/api/index.js b/client/src/api/index.js
+index b7a4907..d5c94b8 100755
+--- a/client/src/api/index.js
++++ b/client/src/api/index.js
+@@ -6,10 +6,12 @@ import projects from './projects';
+ import projectManagers from './project-managers';
+ import boards from './boards';
+ import boardMemberships from './board-memberships';
++import punctuations from './punctuations';
+ import labels from './labels';
+ import lists from './lists';
+ import cards from './cards';
+ import cardMemberships from './card-memberships';
++import cardPunctuations from './card-punctuations';
+ import cardLabels from './card-labels';
+ import tasks from './tasks';
+ import attachments from './attachments';
+@@ -26,10 +28,12 @@ export default {
+   ...projectManagers,
+   ...boards,
+   ...boardMemberships,
++  ...punctuations,
+   ...labels,
+   ...lists,
+   ...cards,
+   ...cardMemberships,
++  ...cardPunctuations,
+   ...cardLabels,
+   ...tasks,
+   ...attachments,
+diff --git a/client/src/components/BoardActions/BoardActions.jsx b/client/src/components/BoardActions/BoardActions.jsx
+index 5745629..f46b444 100644
+--- a/client/src/components/BoardActions/BoardActions.jsx
++++ b/client/src/components/BoardActions/BoardActions.jsx
+@@ -9,8 +9,10 @@ import styles from './BoardActions.module.scss';
+ const BoardActions = React.memo(
+   ({
+     memberships,
++    punctuations,
+     labels,
+     filterUsers,
++    filterPunctuations,
+     filterLabels,
+     allUsers,
+     canEditMemberships,
+@@ -18,6 +20,11 @@ const BoardActions = React.memo(
+     onMembershipDelete,
+     onUserToFilterAdd,
+     onUserFromFilterRemove,
++    onPunctuationToFilterAdd,
++    onPunctuationFromFilterRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelToFilterAdd,
+     onLabelFromFilterRemove,
+     onLabelCreate,
+@@ -38,11 +45,18 @@ const BoardActions = React.memo(
+         <div className={styles.action}>
+           <Filters
+             users={filterUsers}
++            punctuations={filterPunctuations}
+             labels={filterLabels}
+             allBoardMemberships={memberships}
++            allPunctuations={punctuations}
+             allLabels={labels}
+             onUserAdd={onUserToFilterAdd}
+             onUserRemove={onUserFromFilterRemove}
++            onPunctuationAdd={onPunctuationToFilterAdd}
++            onPunctuationRemove={onPunctuationFromFilterRemove}
++            onPunctuationCreate={onPunctuationCreate}
++            onPunctuationUpdate={onPunctuationUpdate}
++            onPunctuationDelete={onPunctuationDelete}
+             onLabelAdd={onLabelToFilterAdd}
+             onLabelRemove={onLabelFromFilterRemove}
+             onLabelCreate={onLabelCreate}
+@@ -58,8 +72,10 @@ const BoardActions = React.memo(
+ BoardActions.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   memberships: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   filterUsers: PropTypes.array.isRequired,
++  filterPunctuations: PropTypes.array.isRequired,
+   filterLabels: PropTypes.array.isRequired,
+   allUsers: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+@@ -68,6 +84,11 @@ BoardActions.propTypes = {
+   onMembershipDelete: PropTypes.func.isRequired,
+   onUserToFilterAdd: PropTypes.func.isRequired,
+   onUserFromFilterRemove: PropTypes.func.isRequired,
++  onPunctuationToFilterAdd: PropTypes.func.isRequired,
++  onPunctuationFromFilterRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelToFilterAdd: PropTypes.func.isRequired,
+   onLabelFromFilterRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/BoardActions/Filters.jsx b/client/src/components/BoardActions/Filters.jsx
+index 621c735..7c13983 100644
+--- a/client/src/components/BoardActions/Filters.jsx
++++ b/client/src/components/BoardActions/Filters.jsx
+@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
+ import { useTranslation } from 'react-i18next';
+ 
+ import User from '../User';
++import Punctuation from '../Punctuation';
+ import Label from '../Label';
+ import BoardMembershipsPopup from '../BoardMembershipsPopup';
++import PunctuationsPopup from '../PunctuationsPopup';
+ import LabelsPopup from '../LabelsPopup';
+ 
+ import styles from './Filters.module.scss';
+@@ -12,11 +14,18 @@ import styles from './Filters.module.scss';
+ const Filters = React.memo(
+   ({
+     users,
++    punctuations,
+     labels,
+     allBoardMemberships,
++    allPunctuations,
+     allLabels,
+     onUserAdd,
+     onUserRemove,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -39,6 +48,13 @@ const Filters = React.memo(
+       [onLabelRemove],
+     );
+ 
++    const handleRemovePunctuationClick = useCallback(
++      (id) => {
++        onPunctuationRemove(id);
++      },
++      [onPunctuationRemove],
++    );
++
+     return (
+       <>
+         <span className={styles.filter}>
+@@ -96,6 +112,37 @@ const Filters = React.memo(
+             </span>
+           ))}
+         </span>
++        <span className={styles.filter}>
++          <PunctuationsPopup
++            items={allPunctuations}
++            currentIds={punctuations.map((punctuation) => punctuation.id)}
++            title={t('common.filterByPunctuations', {
++              context: 'title',
++            })}
++            onSelect={onPunctuationAdd}
++            onDeselect={onPunctuationRemove}
++            onCreate={onPunctuationCreate}
++            onUpdate={onPunctuationUpdate}
++            onDelete={onPunctuationDelete}
++          >
++            <button type="button" className={styles.filterButton}>
++              <span className={styles.filterTitle}>{`${t('common.punctuations')}:`}</span>
++              {punctuations.length === 0 && (
++                <span className={styles.filterLabel}>{t('common.all')}</span>
++              )}
++            </button>
++          </PunctuationsPopup>
++          {punctuations.map((punctuation) => (
++            <span key={punctuation.id} className={styles.filterItem}>
++              <Punctuation
++                name={punctuation.name}
++                color={punctuation.color}
++                size="small"
++                onClick={() => handleRemovePunctuationClick(punctuation.id)}
++              />
++            </span>
++          ))}
++        </span>
+       </>
+     );
+   },
+@@ -104,12 +151,19 @@ const Filters = React.memo(
+ Filters.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/Card/ActionsPopup.jsx b/client/src/components/Card/ActionsPopup.jsx
+index 3b2a7e0..69f4e0a 100644
+--- a/client/src/components/Card/ActionsPopup.jsx
++++ b/client/src/components/Card/ActionsPopup.jsx
+@@ -9,6 +9,7 @@ import { Popup } from '../../lib/custom-ui';
+ import { useSteps } from '../../hooks';
+ import BoardMembershipsStep from '../BoardMembershipsStep';
+ import LabelsStep from '../LabelsStep';
++import PunctuationsStep from '../PunctuationsStep';
+ import DueDateEditStep from '../DueDateEditStep';
+ import TimerEditStep from '../TimerEditStep';
+ import CardMoveStep from '../CardMoveStep';
+@@ -18,6 +19,7 @@ import styles from './ActionsPopup.module.scss';
+ 
+ const StepTypes = {
+   USERS: 'USERS',
++  PUNCTUATIONS: 'PUNCTUATIONS',
+   LABELS: 'LABELS',
+   EDIT_DUE_DATE: 'EDIT_DUE_DATE',
+   EDIT_TIMER: 'EDIT_TIMER',
+@@ -31,7 +33,9 @@ const ActionsStep = React.memo(
+     projectsToLists,
+     boardMemberships,
+     currentUserIds,
++    punctuations,
+     labels,
++    currentPunctuationIds,
+     currentLabelIds,
+     onNameEdit,
+     onUpdate,
+@@ -41,6 +45,11 @@ const ActionsStep = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -60,6 +69,10 @@ const ActionsStep = React.memo(
+       openStep(StepTypes.USERS);
+     }, [openStep]);
+ 
++    const handlePunctuationsClick = useCallback(() => {
++      openStep(StepTypes.PUNCTUATIONS);
++    }, [openStep]);
++
+     const handleLabelsClick = useCallback(() => {
+       openStep(StepTypes.LABELS);
+     }, [openStep]);
+@@ -110,6 +123,19 @@ const ActionsStep = React.memo(
+               onBack={handleBack}
+             />
+           );
++        case StepTypes.PUNCTUATIONS:
++          return (
++            <PunctuationsStep
++              items={punctuations}
++              currentIds={currentPunctuationIds}
++              onSelect={onPunctuationAdd}
++              onDeselect={onPunctuationRemove}
++              onCreate={onPunctuationCreate}
++              onUpdate={onPunctuationUpdate}
++              onDelete={onPunctuationDelete}
++              onBack={handleBack}
++            />
++          );
+         case StepTypes.LABELS:
+           return (
+             <LabelsStep
+@@ -188,6 +214,11 @@ const ActionsStep = React.memo(
+                 context: 'title',
+               })}
+             </Menu.Item>
++            <Menu.Item className={styles.menuItem} onClick={handlePunctuationsClick}>
++              {t('common.punctuations', {
++                context: 'title',
++              })}
++            </Menu.Item>
+             <Menu.Item className={styles.menuItem} onClick={handleLabelsClick}>
+               {t('common.labels', {
+                 context: 'title',
+@@ -226,6 +257,8 @@ ActionsStep.propTypes = {
+   projectsToLists: PropTypes.array.isRequired,
+   boardMemberships: PropTypes.array.isRequired,
+   currentUserIds: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
++  currentPunctuationIds: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   currentLabelIds: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+@@ -237,6 +270,11 @@ ActionsStep.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/Card/Card.jsx b/client/src/components/Card/Card.jsx
+index 262b09b..8a83665 100755
+--- a/client/src/components/Card/Card.jsx
++++ b/client/src/components/Card/Card.jsx
+@@ -11,6 +11,7 @@ import NameEdit from './NameEdit';
+ import ActionsPopup from './ActionsPopup';
+ import User from '../User';
+ import Label from '../Label';
++import Punctuation from '../Punctuation';
+ import DueDate from '../DueDate';
+ import Timer from '../Timer';
+ 
+@@ -31,10 +32,12 @@ const Card = React.memo(
+     notificationsTotal,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     allProjectsToLists,
+     allBoardMemberships,
+     allLabels,
++    allPunctuations,
+     canEdit,
+     onUpdate,
+     onMove,
+@@ -43,6 +46,11 @@ const Card = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -86,6 +94,18 @@ const Card = React.memo(
+               ))}
+             </span>
+           )}
++          {punctuations.length > 0 && (
++            <span className={styles.labels}>
++              {punctuations.map((punctuation) => (
++                <span
++                  key={punctuation.id}
++                  className={classNames(styles.attachment, styles.attachmentLeft)}
++                >
++                  <Punctuation name={punctuation.name} color={punctuation.color} size="tiny" />
++                </span>
++              ))}
++            </span>
++          )}
+           <div className={styles.name}>{name}</div>
+           {tasks.length > 0 && <Tasks items={tasks} />}
+           {(dueDate || timer || notificationsTotal > 0) && (
+@@ -160,6 +180,8 @@ const Card = React.memo(
+                         projectsToLists={allProjectsToLists}
+                         boardMemberships={allBoardMemberships}
+                         currentUserIds={users.map((user) => user.id)}
++                        punctuations={allPunctuations}
++                        currentPunctuationsIds={punctuations.map((punctuation) => punctuation.id)}
+                         labels={allLabels}
+                         currentLabelIds={labels.map((label) => label.id)}
+                         onNameEdit={handleNameEdit}
+@@ -170,6 +192,11 @@ const Card = React.memo(
+                         onUserAdd={onUserAdd}
+                         onUserRemove={onUserRemove}
+                         onBoardFetch={onBoardFetch}
++                        onPunctuationAdd={onPunctuationAdd}
++                        onPunctuationRemove={onPunctuationRemove}
++                        onPunctuationCreate={onPunctuationCreate}
++                        onPunctuationUpdate={onPunctuationUpdate}
++                        onPunctuationDelete={onPunctuationDelete}
+                         onLabelAdd={onLabelAdd}
+                         onLabelRemove={onLabelRemove}
+                         onLabelCreate={onLabelCreate}
+@@ -209,10 +236,12 @@ Card.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   tasks: PropTypes.array.isRequired,
+   allProjectsToLists: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   canEdit: PropTypes.bool.isRequired,
+   onUpdate: PropTypes.func.isRequired,
+@@ -222,6 +251,11 @@ Card.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/CardModal/CardModal.jsx b/client/src/components/CardModal/CardModal.jsx
+index 9b6f100..e197fba 100755
+--- a/client/src/components/CardModal/CardModal.jsx
++++ b/client/src/components/CardModal/CardModal.jsx
+@@ -18,6 +18,7 @@ import DueDate from '../DueDate';
+ import Timer from '../Timer';
+ import BoardMembershipsPopup from '../BoardMembershipsPopup';
+ import LabelsPopup from '../LabelsPopup';
++import PunctuationsPopup from '../PunctuationsPopup';
+ import DueDateEditPopup from '../DueDateEditPopup';
+ import TimerEditPopup from '../TimerEditPopup';
+ import CardMovePopup from '../CardMovePopup';
+@@ -39,12 +40,14 @@ const CardModal = React.memo(
+     projectId,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     attachments,
+     actions,
+     allProjectsToLists,
+     allBoardMemberships,
+     allLabels,
++    allPunctuations,
+     canEdit,
+     canEditAllCommentActions,
+     onUpdate,
+@@ -54,6 +57,11 @@ const CardModal = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -126,6 +134,7 @@ const CardModal = React.memo(
+ 
+     const userIds = users.map((user) => user.id);
+     const labelIds = labels.map((label) => label.id);
++    const punctuationIds = punctuations.map((punctuation) => punctuation.id);
+ 
+     const contentNode = (
+       <Grid className={styles.grid}>
+@@ -145,7 +154,11 @@ const CardModal = React.memo(
+         </Grid.Row>
+         <Grid.Row className={styles.modalPadding}>
+           <Grid.Column width={canEdit ? 12 : 16} className={styles.contentPadding}>
+-            {(users.length > 0 || labels.length > 0 || dueDate || timer) && (
++            {(users.length > 0 ||
++              labels.length > 0 ||
++              punctuations.length > 0 ||
++              dueDate ||
++              timer) && (
+               <div className={styles.moduleWrapper}>
+                 {users.length > 0 && (
+                   <div className={styles.attachments}>
+@@ -234,6 +247,53 @@ const CardModal = React.memo(
+                     )}
+                   </div>
+                 )}
++                {punctuations.length > 0 && (
++                  <div className={styles.attachments}>
++                    <div className={styles.text}>
++                      {t('common.punctuations', {
++                        context: 'title',
++                      })}
++                    </div>
++                    {punctuations.map((punctuation) => (
++                      <span key={punctuation.id} className={styles.attachment}>
++                        {canEdit ? (
++                          <PunctuationsPopup
++                            key={punctuation.id}
++                            items={allPunctuations}
++                            currentIds={punctuationIds}
++                            onSelect={onPunctuationAdd}
++                            onDeselect={onPunctuationRemove}
++                            onCreate={onPunctuationCreate}
++                            onUpdate={onPunctuationUpdate}
++                            onDelete={onPunctuationDelete}
++                          >
++                            <Label name={punctuation.name} color={punctuation.color} />
++                          </PunctuationsPopup>
++                        ) : (
++                          <Label name={punctuation.name} color={punctuation.color} />
++                        )}
++                      </span>
++                    ))}
++                    {canEdit && (
++                      <PunctuationsPopup
++                        items={allPunctuations}
++                        currentIds={punctuationIds}
++                        onSelect={onPunctuationAdd}
++                        onDeselect={onPunctuationRemove}
++                        onCreate={onPunctuationCreate}
++                        onUpdate={onPunctuationUpdate}
++                        onDelete={onPunctuationDelete}
++                      >
++                        <button
++                          type="button"
++                          className={classNames(styles.attachment, styles.dueDate)}
++                        >
++                          <Icon name="add" size="small" className={styles.addAttachment} />
++                        </button>
++                      </PunctuationsPopup>
++                    )}
++                  </div>
++                )}
+                 {dueDate && (
+                   <div className={styles.attachments}>
+                     <div className={styles.text}>
+@@ -348,6 +408,22 @@ const CardModal = React.memo(
+             <Grid.Column width={4} className={styles.sidebarPadding}>
+               <div className={styles.actions}>
+                 <span className={styles.actionsTitle}>{t('action.addToCard')}</span>
++
++                <PunctuationsPopup
++                  items={allPunctuations}
++                  currentIds={punctuationIds}
++                  onSelect={onPunctuationAdd}
++                  onDeselect={onPunctuationRemove}
++                  onCreate={onPunctuationCreate}
++                  onUpdate={onPunctuationUpdate}
++                  onDelete={onPunctuationDelete}
++                >
++                  <Button fluid className={styles.actionButton}>
++                    <Icon name="bookmark" className={styles.actionIcon} />
++                    {t('Punctuation')}
++                  </Button>
++                </PunctuationsPopup>
++
+                 <BoardMembershipsPopup
+                   items={allBoardMemberships}
+                   currentUserIds={userIds}
+@@ -470,12 +546,14 @@ CardModal.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   tasks: PropTypes.array.isRequired,
+   attachments: PropTypes.array.isRequired,
+   actions: PropTypes.array.isRequired,
+   allProjectsToLists: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   canEdit: PropTypes.bool.isRequired,
+   canEditAllCommentActions: PropTypes.bool.isRequired,
+@@ -486,6 +564,11 @@ CardModal.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/CardModal/CardModal.module.scss b/client/src/components/CardModal/CardModal.module.scss
+index 9fce079..575ae2a 100644
+--- a/client/src/components/CardModal/CardModal.module.scss
++++ b/client/src/components/CardModal/CardModal.module.scss
+@@ -1,6 +1,6 @@
+ :global(#app) {
+   .actionButton {
+-    background: #ebeef0;
++    background: #ff0000;
+     box-shadow: 0 1px 0 0 rgba(9, 30, 66, 0.13);
+     color: #444;
+     margin-top: 8px;
+diff --git a/client/src/components/LabelsStep/Editor.module.scss b/client/src/components/LabelsStep/Editor.module.scss
+index 31dbfd1..6c38145 100644
+--- a/client/src/components/LabelsStep/Editor.module.scss
++++ b/client/src/components/LabelsStep/Editor.module.scss
+@@ -6,7 +6,7 @@
+     padding: 0;
+     position: relative;
+     width: 49.6px;
+-
++    
+     &:hover {
+       opacity: 0.9;
+     }
+@@ -41,7 +41,7 @@
+   .field {
+     margin-bottom: 8px;
+   }
+-
++  
+   .text {
+     color: #444444;
+     font-size: 12px;
+diff --git a/client/src/components/LabelsStep/Item.module.scss b/client/src/components/LabelsStep/Item.module.scss
+index 0382143..e476b47 100644
+--- a/client/src/components/LabelsStep/Item.module.scss
++++ b/client/src/components/LabelsStep/Item.module.scss
+@@ -1,6 +1,6 @@
+ :global(#app) {
+   .editButton {
+-    background: transparent;
++    background: red;
+     box-shadow: none;
+     flex: 0 0 auto;
+     font-weight: normal;
+@@ -14,7 +14,7 @@
+   }
+ 
+   .labelButton {
+-    color: #fff;
++    color: rgb(250, 3, 3);
+     flex: 1 1 auto;
+     font-size: 14px;
+     font-weight: bold;
+diff --git a/client/src/components/LabelsStep/LabelsStep.module.scss b/client/src/components/LabelsStep/LabelsStep.module.scss
+index 0fadc31..059912a 100644
+--- a/client/src/components/LabelsStep/LabelsStep.module.scss
++++ b/client/src/components/LabelsStep/LabelsStep.module.scss
+@@ -2,7 +2,7 @@
+   .addButton {
+     background: transparent;
+     box-shadow: none;
+-    color: #6b808c;
++    color: #00f80c;
+     font-weight: normal;
+     margin-top: 8px;
+     padding: 6px 11px;
+diff --git a/client/src/constants/ActionTypes.js b/client/src/constants/ActionTypes.js
+index f398232..367f73e 100644
+--- a/client/src/constants/ActionTypes.js
++++ b/client/src/constants/ActionTypes.js
+@@ -154,6 +154,31 @@ export default {
+   LABEL_TO_BOARD_FILTER_ADD: 'LABEL_TO_BOARD_FILTER_ADD',
+   LABEL_FROM_BOARD_FILTER_REMOVE: 'LABEL_FROM_BOARD_FILTER_REMOVE',
+ 
++  /* Punctuation */
++
++  PUNCTUATION_CREATE: 'PUNCTUATION_CREATE',
++  PUNCTUATION_CREATE__SUCCESS: 'PUNCTUATION_CREATE__SUCCESS',
++  PUNCTUATION_CREATE__FAILURE: 'PUNCTUATION_CREATE__FAILURE',
++  PUNCTUATION_CREATE_HANDLE: 'PUNCTUATION_CREATE_HANDLE',
++  PUNCTUATION_UPDATE: 'PUNCTUATION_UPDATE',
++  PUNCTUATION_UPDATE__SUCCESS: 'PUNCTUATION_UPDATE__SUCCESS',
++  PUNCTUATION_UPDATE__FAILURE: 'PUNCTUATION_UPDATE__FAILURE',
++  PUNCTUATION_UPDATE_HANDLE: 'PUNCTUATION_UPDATE_HANDLE',
++  PUNCTUATION_DELETE: 'PUNCTUATION_DELETE',
++  PUNCTUATION_DELETE__SUCCESS: 'PUNCTUATION_DELETE__SUCCESS',
++  PUNCTUATION_DELETE__FAILURE: 'PUNCTUATION_DELETE__FAILURE',
++  PUNCTUATION_DELETE_HANDLE: 'PUNCTUATION_DELETE_HANDLE',
++  PUNCTUATION_TO_CARD_ADD: 'PUNCTUATION_TO_CARD_ADD',
++  PUNCTUATION_TO_CARD_ADD__SUCCESS: 'PUNCTUATION_TO_CARD_ADD__SUCCESS',
++  PUNCTUATION_TO_CARD_ADD__FAILURE: 'PUNCTUATION_TO_CARD_ADD__FAILURE',
++  PUNCTUATION_TO_CARD_ADD_HANDLE: 'PUNCTUATION_TO_CARD_ADD_HANDLE',
++  PUNCTUATION_FROM_CARD_REMOVE: 'PUNCTUATION_FROM_CARD_REMOVE',
++  PUNCTUATION_FROM_CARD_REMOVE__SUCCESS: 'PUNCTUATION_FROM_CARD_REMOVE__SUCCESS',
++  PUNCTUATION_FROM_CARD_REMOVE__FAILURE: 'PUNCTUATION_FROM_CARD_REMOVE__FAILURE',
++  PUNCTUATION_FROM_CARD_REMOVE_HANDLE: 'PUNCTUATION_FROM_CARD_REMOVE_HANDLE',
++  PUNCTUATION_TO_BOARD_FILTER_ADD: 'PUNCTUATION_TO_BOARD_FILTER_ADD',
++  PUNCTUATION_FROM_BOARD_FILTER_REMOVE: 'PUNCTUATION_FROM_BOARD_FILTER_REMOVE',
++
+   /* List */
+ 
+   LIST_CREATE: 'LIST_CREATE',
+diff --git a/client/src/constants/EntryActionTypes.js b/client/src/constants/EntryActionTypes.js
+index 6ebc289..8e5a333 100755
+--- a/client/src/constants/EntryActionTypes.js
++++ b/client/src/constants/EntryActionTypes.js
+@@ -101,6 +101,23 @@ export default {
+   LABEL_TO_FILTER_IN_CURRENT_BOARD_ADD: `${PREFIX}/LABEL_TO_FILTER_IN_CURRENT_BOARD_ADD`,
+   LABEL_FROM_FILTER_IN_CURRENT_BOARD_REMOVE: `${PREFIX}/LABEL_FROM_FILTER_IN_CURRENT_BOARD_REMOVE`,
+ 
++  /* Punctuation */
++
++  PUNCTUATION_IN_CURRENT_BOARD_CREATE: `${PREFIX}/PUNCTUATION_IN_CURRENT_BOARD_CREATE`,
++  PUNCTUATION_CREATE_HANDLE: `${PREFIX}/PUNCTUATION_CREATE_HANDLE`,
++  PUNCTUATION_UPDATE: `${PREFIX}/PUNCTUATION_UPDATE`,
++  PUNCTUATION_UPDATE_HANDLE: `${PREFIX}/PUNCTUATION_UPDATE_HANDLE`,
++  PUNCTUATION_DELETE: `${PREFIX}/PUNCTUATION_DELETE`,
++  PUNCTUATION_DELETE_HANDLE: `${PREFIX}/PUNCTUATION_DELETE_HANDLE`,
++  PUNCTUATION_TO_CARD_ADD: `${PREFIX}/PUNCTUATION_TO_CARD_ADD`,
++  PUNCTUATION_TO_CURRENT_CARD_ADD: `${PREFIX}/PUNCTUATION_TO_CURRENT_CARD_ADD`,
++  PUNCTUATION_TO_CARD_ADD_HANDLE: `${PREFIX}/PUNCTUATION_TO_CARD_ADD_HANDLE`,
++  PUNCTUATION_FROM_CARD_REMOVE: `${PREFIX}/PUNCTUATION_FROM_CARD_REMOVE`,
++  PUNCTUATION_FROM_CURRENT_CARD_REMOVE: `${PREFIX}/PUNCTUATION_FROM_CURRENT_CARD_REMOVE`,
++  PUNCTUATION_FROM_CARD_REMOVE_HANDLE: `${PREFIX}/PUNCTUATION_FROM_CARD_REMOVE_HANDLE`,
++  PUNCTUATION_TO_FILTER_IN_CURRENT_BOARD_ADD: `${PREFIX}/PUNCTUATION_TO_FILTER_IN_CURRENT_BOARD_ADD`,
++  PUNCTUATION_FROM_FILTER_IN_CURRENT_BOARD_REMOVE: `${PREFIX}/PUNCTUATION_FROM_FILTER_IN_CURRENT_BOARD_REMOVE`,
++
+   /* List */
+ 
+   LIST_IN_CURRENT_BOARD_CREATE: `${PREFIX}/LIST_IN_CURRENT_BOARD_CREATE`,
+diff --git a/client/src/containers/BoardActionsContainer.js b/client/src/containers/BoardActionsContainer.js
+index 9ede5ca..c7ec638 100644
+--- a/client/src/containers/BoardActionsContainer.js
++++ b/client/src/containers/BoardActionsContainer.js
+@@ -3,21 +3,28 @@ import { connect } from 'react-redux';
+ 
+ import {
+   filterLabelsForCurrentBoardSelector,
++  filterPunctuationsForCurrentBoardSelector,
+   filterUsersForCurrentBoardSelector,
+   isCurrentUserManagerForCurrentProjectSelector,
+   labelsForCurrentBoardSelector,
+   membershipsForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
+   usersSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToFilterInCurrentBoard,
+   addLabelToFilterInCurrentBoard,
+   addUserToFilterInCurrentBoard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   createMembershipInCurrentBoard,
+   deleteBoardMembership,
++  deletePunctuation,
+   deleteLabel,
++  removePunctuationFromFilterInCurrentBoard,
+   removeLabelFromFilterInCurrentBoard,
+   removeUserFromFilterInCurrentBoard,
++  updatePunctuation,
+   updateLabel,
+ } from '../actions/entry';
+ import BoardActions from '../components/BoardActions';
+@@ -27,13 +34,17 @@ const mapStateToProps = (state) => {
+   const isCurrentUserManager = isCurrentUserManagerForCurrentProjectSelector(state);
+   const memberships = membershipsForCurrentBoardSelector(state);
+   const labels = labelsForCurrentBoardSelector(state);
++  const punctuations = punctuationsForCurrentBoardSelector(state);
+   const filterUsers = filterUsersForCurrentBoardSelector(state);
+   const filterLabels = filterLabelsForCurrentBoardSelector(state);
++  const filterPunctuations = filterPunctuationsForCurrentBoardSelector(state);
+ 
+   return {
+     memberships,
+     labels,
++    punctuations,
+     filterUsers,
++    filterPunctuations,
+     filterLabels,
+     allUsers,
+     canEditMemberships: isCurrentUserManager,
+@@ -47,6 +58,11 @@ const mapDispatchToProps = (dispatch) =>
+       onMembershipDelete: deleteBoardMembership,
+       onUserToFilterAdd: addUserToFilterInCurrentBoard,
+       onUserFromFilterRemove: removeUserFromFilterInCurrentBoard,
++      onPunctuationToFilterAdd: addPunctuationToFilterInCurrentBoard,
++      onPunctuationFromFilterRemove: removePunctuationFromFilterInCurrentBoard,
++      onPunctuationCreate: createPunctuationInCurrentBoard,
++      onPunctuationUpdate: updatePunctuation,
++      onPunctuationDelete: deletePunctuation,
+       onLabelToFilterAdd: addLabelToFilterInCurrentBoard,
+       onLabelFromFilterRemove: removeLabelFromFilterInCurrentBoard,
+       onLabelCreate: createLabelInCurrentBoard,
+diff --git a/client/src/containers/CardContainer.js b/client/src/containers/CardContainer.js
+index 09a93cc..b227671 100755
+--- a/client/src/containers/CardContainer.js
++++ b/client/src/containers/CardContainer.js
+@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
+ import {
+   isCurrentUserMemberForCurrentBoardSelector,
+   labelsForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
+   makeCardByIdSelector,
++  makePunctuationsByCardIdSelector,
+   makeLabelsByCardIdSelector,
+   makeNotificationsTotalByCardIdSelector,
+   makeTasksByCardIdSelector,
+@@ -14,16 +16,21 @@ import {
+   projectsToListsForCurrentUserSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToCard,
+   addLabelToCard,
+   addUserToCard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   deleteCard,
++  deletePunctuation,
+   deleteLabel,
+   fetchBoard,
+   moveCard,
++  removePunctuationFromCard,
+   removeLabelFromCard,
+   removeUserFromCard,
+   transferCard,
++  updatePunctuation,
+   updateLabel,
+   updateCard,
+ } from '../actions/entry';
+@@ -32,6 +39,7 @@ import Card from '../components/Card';
+ const makeMapStateToProps = () => {
+   const cardByIdSelector = makeCardByIdSelector();
+   const usersByCardIdSelector = makeUsersByCardIdSelector();
++  const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
+   const labelsByCardIdSelector = makeLabelsByCardIdSelector();
+   const tasksByCardIdSelector = makeTasksByCardIdSelector();
+   const notificationsTotalByCardIdSelector = makeNotificationsTotalByCardIdSelector();
+@@ -40,6 +48,7 @@ const makeMapStateToProps = () => {
+     const { projectId } = pathSelector(state);
+     const allProjectsToLists = projectsToListsForCurrentUserSelector(state);
+     const allBoardMemberships = membershipsForCurrentBoardSelector(state);
++    const allPunctuations = punctuationsForCurrentBoardSelector(state);
+     const allLabels = labelsForCurrentBoardSelector(state);
+     const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
+ 
+@@ -49,6 +58,7 @@ const makeMapStateToProps = () => {
+     );
+ 
+     const users = usersByCardIdSelector(state, id);
++    const punctuations = punctuationsByCardIdSelector(state, id);
+     const labels = labelsByCardIdSelector(state, id);
+     const tasks = tasksByCardIdSelector(state, id);
+     const notificationsTotal = notificationsTotalByCardIdSelector(state, id);
+@@ -66,10 +76,12 @@ const makeMapStateToProps = () => {
+       isPersisted,
+       notificationsTotal,
+       users,
++      punctuations,
+       labels,
+       tasks,
+       allProjectsToLists,
+       allBoardMemberships,
++      allPunctuations,
+       allLabels,
+       canEdit: isCurrentUserMember,
+     };
+@@ -86,6 +98,11 @@ const mapDispatchToProps = (dispatch, { id }) =>
+       onUserAdd: (userId) => addUserToCard(userId, id),
+       onUserRemove: (userId) => removeUserFromCard(userId, id),
+       onBoardFetch: fetchBoard,
++      onPunctuationAdd: (punctuationId) => addPunctuationToCard(punctuationId, id),
++      onPunctuationRemove: (punctuationId) => removePunctuationFromCard(punctuationId, id),
++      onPunctuationCreate: (data) => createPunctuationInCurrentBoard(data),
++      onPunctuationUpdate: (punctuationId, data) => updatePunctuation(punctuationId, data),
++      onPunctuationDelete: (punctuationId) => deletePunctuation(punctuationId),
+       onLabelAdd: (labelId) => addLabelToCard(labelId, id),
+       onLabelRemove: (labelId) => removeLabelFromCard(labelId, id),
+       onLabelCreate: (data) => createLabelInCurrentBoard(data),
+diff --git a/client/src/containers/CardModalContainer.js b/client/src/containers/CardModalContainer.js
+index 57bb77f..2db0a93 100755
+--- a/client/src/containers/CardModalContainer.js
++++ b/client/src/containers/CardModalContainer.js
+@@ -9,6 +9,8 @@ import {
+   currentCardSelector,
+   isCurrentUserManagerForCurrentProjectSelector,
+   isCurrentUserMemberForCurrentBoardSelector,
++  punctuationsForCurrentBoardSelector,
++  punctuationsForCurrentCardSelector,
+   labelsForCurrentBoardSelector,
+   labelsForCurrentCardSelector,
+   membershipsForCurrentBoardSelector,
+@@ -18,26 +20,31 @@ import {
+   usersForCurrentCardSelector,
+ } from '../selectors';
+ import {
++  addPunctuationToCurrentCard,
+   addLabelToCurrentCard,
+   addUserToCurrentCard,
+   createAttachmentInCurrentCard,
+   createCommentActionInCurrentCard,
++  createPunctuationInCurrentBoard,
+   createLabelInCurrentBoard,
+   createTaskInCurrentCard,
+   deleteAttachment,
+   deleteCommentAction,
+   deleteCurrentCard,
++  deletePunctuation,
+   deleteLabel,
+   deleteTask,
+   fetchActionsInCurrentCard,
+   fetchBoard,
+   moveCurrentCard,
++  removePunctuationFromCurrentCard,
+   removeLabelFromCurrentCard,
+   removeUserFromCurrentCard,
+   transferCurrentCard,
+   updateAttachment,
+   updateCommentAction,
+   updateCurrentCard,
++  updatePunctuation,
+   updateLabel,
+   updateTask,
+ } from '../actions/entry';
+@@ -49,6 +56,7 @@ const mapStateToProps = (state) => {
+   const allProjectsToLists = projectsToListsForCurrentUserSelector(state);
+   const isCurrentUserManager = isCurrentUserManagerForCurrentProjectSelector(state);
+   const allBoardMemberships = membershipsForCurrentBoardSelector(state);
++  const allPunctuations = punctuationsForCurrentBoardSelector(state);
+   const allLabels = labelsForCurrentBoardSelector(state);
+   const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
+ 
+@@ -66,6 +74,7 @@ const mapStateToProps = (state) => {
+ 
+   const users = usersForCurrentCardSelector(state);
+   const labels = labelsForCurrentCardSelector(state);
++  const punctuations = punctuationsForCurrentCardSelector(state);
+   const tasks = tasksForCurrentCardSelector(state);
+   const attachments = attachmentsForCurrentCardSelector(state);
+   const actions = actionsForCurrentCardSelector(state);
+@@ -83,11 +92,13 @@ const mapStateToProps = (state) => {
+     projectId,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     attachments,
+     actions,
+     allProjectsToLists,
+     allBoardMemberships,
++    allPunctuations,
+     allLabels,
+     canEdit: isCurrentUserMember,
+     canEditAllCommentActions: isCurrentUserManager,
+@@ -104,6 +115,11 @@ const mapDispatchToProps = (dispatch) =>
+       onUserAdd: addUserToCurrentCard,
+       onUserRemove: removeUserFromCurrentCard,
+       onBoardFetch: fetchBoard,
++      onPunctuationAdd: addPunctuationToCurrentCard,
++      onPunctuationRemove: removePunctuationFromCurrentCard,
++      onPunctuationCreate: createPunctuationInCurrentBoard,
++      onPunctuationUpdate: updatePunctuation,
++      onPunctuationDelete: deletePunctuation,
+       onLabelAdd: addLabelToCurrentCard,
+       onLabelRemove: removeLabelFromCurrentCard,
+       onLabelCreate: createLabelInCurrentBoard,
+diff --git a/client/src/locales/cs/core.js b/client/src/locales/cs/core.js
+index 09c6010..09b5dc8 100644
+--- a/client/src/locales/cs/core.js
++++ b/client/src/locales/cs/core.js
+@@ -28,6 +28,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'Opravdu chcete smazat tuto kartu?',
+       areYouSureYouWantToDeleteThisComment: 'Opravdu chcete smazat tento komentář?',
+       areYouSureYouWantToDeleteThisLabel: 'Opravdu chcete smazat tento štítek?',
++      areYouSureYouWantToDeleteThisPunctuation: 'Opravdu chcete smazat toto skóre?',
+       areYouSureYouWantToDeleteThisList: 'Opravdu chcete smazat tento seznam?',
+       areYouSureYouWantToDeleteThisProject: 'Opravdu chcete smazat tento projekt?',
+       areYouSureYouWantToDeleteThisTask: 'Opravdu chcete smazat tento úkol?',
+@@ -45,6 +46,7 @@ export default {
+       color: 'Barva',
+       createBoard_title: 'Vytvořit tabuli',
+       createLabel_title: 'Vytvořit štítek',
++      createPunctuation_title: 'vytvořit skóre',
+       createNewOneOrSelectExistingOne: 'Vytvořit nový nebo vyberte<br />již existující',
+       createProject_title: 'Vytvořit projekt',
+       createTextFile_title: 'Vytvořit textový soubor',
+@@ -56,6 +58,7 @@ export default {
+       deleteCard_title: 'Smazat kartu',
+       deleteComment_title: 'Smazat komentář',
+       deleteLabel_title: 'Smazat štítek',
++      deletePunctuation_title: 'Smazat skóre',
+       deleteList_title: 'Smazat seznam',
+       deleteProject_title: 'Smazat projekt',
+       deleteTask_title: 'Smazat úkol',
+@@ -68,6 +71,7 @@ export default {
+       editDueDate_title: 'Upravit Termín do',
+       editEmail_title: 'Upravit e-mail',
+       editLabel_title: 'Upravit štítek',
++      editPunctuation_title: 'Upravit skóre',
+       editPassword_title: 'Upravit heslo',
+       editTimer_title: 'Upravit časovač',
+       editUsername_title: 'Upravit uživatelské jméno',
+@@ -80,11 +84,13 @@ export default {
+       enterProjectTitle: 'Vlož název projektu',
+       enterTaskDescription: 'Vlož popis úkolu...',
+       filterByLabels_title: 'Filtruj podle štítku',
++      filterByPunctuations_title: 'filtrovat podle skóre',
+       filterByMembers_title: 'Filtruj podle člena',
+       fromComputer_title: 'Z počítače',
+       hours: 'Hodiny',
+       invalidCurrentPassword: 'Neplatné aktuální heslo',
+       labels: 'Štítky',
++      punctuations: 'Skóre',
+       list: 'Seznam',
+       listActions_title: 'Seznam akcí',
+       members: 'Členové',
+@@ -149,6 +155,8 @@ export default {
+       createFile: 'Vytvořit soubor',
+       createLabel: 'Vytvořit štítek',
+       createNewLabel: 'Vytvořit nový štítek',
++      createPunctuation: 'Vytvořit skóre',
++      createNewPunctuation: 'Vytvořit nový skóre',
+       createProject: 'Vytvořit projekt',
+       delete: 'Smazat',
+       deleteAttachment: 'Smazat přílohu',
+@@ -159,6 +167,7 @@ export default {
+       deleteComment: 'Smazat komentář',
+       deleteImage: 'Smazat obrázek',
+       deleteLabel: 'Smazat štítek',
++      deletePunctuation: 'Smazat skóre',
+       deleteList: 'Smazat seznam',
+       deleteList_title: 'Smazat seznam',
+       deleteProject: 'Smazat projekt',
+diff --git a/client/src/locales/en/core.js b/client/src/locales/en/core.js
+index 1eefd31..0c91534 100644
+--- a/client/src/locales/en/core.js
++++ b/client/src/locales/en/core.js
+@@ -25,6 +25,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'Are you sure you want to delete this card?',
+       areYouSureYouWantToDeleteThisComment: 'Are you sure you want to delete this comment?',
+       areYouSureYouWantToDeleteThisLabel: 'Are you sure you want to delete this label?',
++      areYouSureYouWantToDeleteThisPunctuation: 'Are you sure you want to delete this punctuation?',
+       areYouSureYouWantToDeleteThisList: 'Are you sure you want to delete this list?',
+       areYouSureYouWantToDeleteThisProject: 'Are you sure you want to delete this project?',
+       areYouSureYouWantToDeleteThisTask: 'Are you sure you want to delete this task?',
+@@ -47,6 +48,7 @@ export default {
+       color: 'Color',
+       createBoard_title: 'Create Board',
+       createLabel_title: 'Create Label',
++      createPunctuation_title: 'Create Punctuation',
+       createNewOneOrSelectExistingOne: 'Create a new one or select<br />an existing one',
+       createProject_title: 'Create Project',
+       createTextFile_title: 'Create Text File',
+@@ -59,6 +61,7 @@ export default {
+       deleteCard_title: 'Delete Card',
+       deleteComment_title: 'Delete Comment',
+       deleteLabel_title: 'Delete Label',
++      deletePunctuation_title: 'Delete Punctuation',
+       deleteList_title: 'Delete List',
+       deleteProject_title: 'Delete Project',
+       deleteTask_title: 'Delete Task',
+@@ -71,6 +74,7 @@ export default {
+       editDueDate_title: 'Edit Due Date',
+       editEmail_title: 'Edit E-mail',
+       editLabel_title: 'Edit Label',
++      editPunctuation_title: 'Edit Punctuation',
+       editPassword_title: 'Edit Password',
+       editTimer_title: 'Edit Timer',
+       editUsername_title: 'Edit Username',
+@@ -83,12 +87,14 @@ export default {
+       enterProjectTitle: 'Enter project title',
+       enterTaskDescription: 'Enter task description...',
+       filterByLabels_title: 'Filter By Labels',
++      filterByPunctuations_title: 'Filter By Punctuations',
+       filterByMembers_title: 'Filter By Members',
+       fromComputer_title: 'From Computer',
+       general: 'General',
+       hours: 'Hours',
+       invalidCurrentPassword: 'Invalid current password',
+       labels: 'Labels',
++      punctuations: 'Punctuations',
+       leaveBoard_title: 'Leave Board',
+       leaveProject_title: 'Leave Project',
+       list: 'List',
+@@ -157,6 +163,8 @@ export default {
+       createFile: 'Create file',
+       createLabel: 'Create label',
+       createNewLabel: 'Create new label',
++      createPunctuation: 'Create punctuation',
++      createNewPunctuation: 'Create new punctuation',
+       createProject: 'Create project',
+       delete: 'Delete',
+       deleteAttachment: 'Delete attachment',
+@@ -167,6 +175,7 @@ export default {
+       deleteComment: 'Delete comment',
+       deleteImage: 'Delete image',
+       deleteLabel: 'Delete label',
++      deletePunctuation: 'Delete punctuation',
+       deleteList: 'Delete list',
+       deleteList_title: 'Delete List',
+       deleteProject: 'Delete project',
+diff --git a/client/src/locales/es/core.js b/client/src/locales/es/core.js
+index 37fff6e..14e6db8 100644
+--- a/client/src/locales/es/core.js
++++ b/client/src/locales/es/core.js
+@@ -28,6 +28,8 @@ export default {
+       areYouSureYouWantToDeleteThisCard: '¿Estás seguro de que quieres borrar esta tarjeta?',
+       areYouSureYouWantToDeleteThisComment: '¿Estás seguro de que quieres borrar este comentario?',
+       areYouSureYouWantToDeleteThisLabel: '¿Estás seguro de que quieres borrar esta etiqueta?',
++      areYouSureYouWantToDeleteThisPunctuation:
++        '¿Estás seguro de que quieres borrar esta puntuación?',
+       areYouSureYouWantToDeleteThisList: '¿Estás seguro de que quieres borrar esta lista?',
+       areYouSureYouWantToDeleteThisProject: '¿Estás seguro de que quieres borrar este proyecto?',
+       areYouSureYouWantToDeleteThisTask: '¿Estás seguro de que quieres borrar esta tarea?',
+@@ -45,6 +47,7 @@ export default {
+       color: 'Color',
+       createBoard_title: 'Crear Tablero',
+       createLabel_title: 'Crear Etiqueta',
++      createPunctuation_title: 'Crear Puntuación',
+       createNewOneOrSelectExistingOne: 'Crear uno nuevo o seleccionar<br /> uno existente',
+       createProject_title: 'Crear Proyecto',
+       createTextFile_title: 'Crear archivo de Texto',
+@@ -56,6 +59,7 @@ export default {
+       deleteCard_title: 'Borrar tarjeta',
+       deleteComment_title: 'Borrar Comentario',
+       deleteLabel_title: 'Borrar Etiqueta',
++      deletePunctuation_title: 'Borrar Puntuación',
+       deleteList_title: 'Borrar Lista',
+       deleteProject_title: 'Borrar Proyecto',
+       deleteTask_title: 'Borrar Tarea',
+@@ -68,6 +72,7 @@ export default {
+       editDueDate_title: 'Editar Fecha de Vencimiento',
+       editEmail_title: 'Editar Correo',
+       editLabel_title: 'Editar Etiqueta',
++      editPunctuation_title: 'Editar Puntuación',
+       editPassword_title: 'Editar Contraseña',
+       editTimer_title: 'Editar Temporizador',
+       editUsername_title: 'Edit nombre de usuario',
+@@ -80,11 +85,13 @@ export default {
+       enterProjectTitle: 'Escribe el nombre del proyecto',
+       enterTaskDescription: 'Escribe la descripción de la tarea...',
+       filterByLabels_title: 'Filtrar por Etiquetas',
++      filterByPunctuations_title: 'Filtrar por Puntuaciones',
+       filterByMembers_title: 'Filtrar por Miembros',
+       fromComputer_title: 'Desde Computador',
+       hours: 'Horas',
+       invalidCurrentPassword: 'Contraseña actual invalida',
+       labels: 'Etíquetas',
++      punctuations: 'Puntuaciones',
+       list: 'Lista',
+       listActions_title: 'Acciónes de Lista',
+       members: 'Miembros',
+@@ -150,6 +157,8 @@ export default {
+       createFile: 'Crear archivo',
+       createLabel: 'Crear etiqueta',
+       createNewLabel: 'Crear una nueva etiqueta',
++      createPunctuation: 'Crear puntuación',
++      createNewPunctuation: 'Crear una nueva puntuación',
+       createProject: 'Crear proyecto',
+       delete: 'Borrar',
+       deleteAttachment: 'Borrar adjuntos',
+@@ -160,6 +169,7 @@ export default {
+       deleteComment: 'Borrar comentario',
+       deleteImage: 'Borrar imagen',
+       deleteLabel: 'Borrar etiqueta',
++      deletePunctuation: 'Borrar puntuación',
+       deleteList: 'Borrar lista',
+       deleteList_title: 'Borrar Lista',
+       deleteProject: 'Borrar proyecto',
+diff --git a/client/src/locales/fr/core.js b/client/src/locales/fr/core.js
+index 8128750..8990c9b 100644
+--- a/client/src/locales/fr/core.js
++++ b/client/src/locales/fr/core.js
+@@ -28,6 +28,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'Voulez-vous vraiment supprimer cette carte?',
+       areYouSureYouWantToDeleteThisComment: 'Êtes-vous sûr de vouloir supprimer ce commentaire?',
+       areYouSureYouWantToDeleteThisLabel: 'Voulez-vous vraiment supprimer ce libellé?',
++      areYouSureYouWantToDeleteThisPunctuation: 'Voulez-vous vraiment supprimer ce ponctuation?',
+       areYouSureYouWantToDeleteThisList: 'Êtes-vous sûr de vouloir supprimer cette liste?',
+       areYouSureYouWantToDeleteThisProject: 'Êtes-vous sûr de vouloir supprimer ce projet?',
+       areYouSureYouWantToDeleteThisTask: 'Êtes-vous sûr de vouloir supprimer cette tâche?',
+@@ -45,6 +46,7 @@ export default {
+       color: 'Couleur',
+       createBoard_title: 'Créer un tableau',
+       createLabel_title: 'Créer une étiquette',
++      createPunctuation_title: 'Créer une ponctuation',
+       createNewOneOrSelectExistingOne: 'Créez-en un nouveau ou sélectionnez <br /> un existant',
+       createProject_title: 'Créer un projet',
+       createTextFile_title: 'Créer un fichier texte',
+@@ -56,6 +58,7 @@ export default {
+       deleteCard_title: 'Supprimer la carte',
+       deleteComment_title: 'Supprimer le commentaire',
+       deleteLabel_title: "Supprimer l'étiquette",
++      deletePunctuation_title: 'Supprimer le ponctuation',
+       deleteList_title: 'Supprimer la liste',
+       deleteProject_title: 'Supprimer le projet',
+       deleteTask_title: 'Supprimer la tâche',
+@@ -68,6 +71,7 @@ export default {
+       editDueDate_title: "Modifier la date d'échéance",
+       editEmail_title: "Modifier l'e-mail",
+       editLabel_title: "Modifier l'étiquette",
++      editPunctuation_title: 'Modifier le ponctuation',
+       editPassword_title: 'Modifier le mot de passe',
+       editTimer_title: 'Modifier la minuterie',
+       editUsername_title: "Modifier le nom d'utilisateur",
+@@ -80,11 +84,13 @@ export default {
+       enterProjectTitle: 'Saisir le titre du projet',
+       enterTaskDescription: 'Saisir la description de la tâche ...',
+       filterByLabels_title: 'Filtrer par libellés',
++      filterByPunctuations_title: 'Filtrer par ponctuation',
+       filterByMembers_title: 'Filtrer par membres',
+       fromComputer_title: "Depuis l'ordinateur",
+       hours: 'Les heures',
+       invalidCurrentPassword: 'Mot de passe actuel invalide',
+       labels: 'Étiquettes',
++      punctuations: 'Ponctuation',
+       list: 'Lister',
+       listActions_title: 'Liste des actions',
+       members: 'Membres',
+@@ -150,6 +156,8 @@ export default {
+       createFile: 'Créer un fichier',
+       createLabel: 'Créer une étiquette',
+       createNewLabel: 'Créer une nouvelle étiquette',
++      createPunctuation: 'Créer une ponctuation',
++      createNewPunctuation: 'Créer une nouvelle ponctuation',
+       createProject: 'Créer un projet',
+       delete: 'Supprimer',
+       deleteAttachment: 'Supprimer la pièce jointe',
+@@ -160,6 +168,7 @@ export default {
+       deleteComment: 'Supprimer le commentaire',
+       deleteImage: "Supprimer l'image",
+       deleteLabel: "Supprimer l'étiquette",
++      deletePunctuation: 'Supprimer le ponctuation',
+       deleteList: 'Supprimer la liste',
+       deleteList_title: 'Supprimer la liste',
+       deleteProject: 'Supprimer le projet',
+diff --git a/client/src/locales/ja/core.js b/client/src/locales/ja/core.js
+index 5cbe99d..d104b98 100644
+--- a/client/src/locales/ja/core.js
++++ b/client/src/locales/ja/core.js
+@@ -29,6 +29,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'このカードを削除してもよろしいですか？',
+       areYouSureYouWantToDeleteThisComment: 'このコメントを削除してもよろしいですか？',
+       areYouSureYouWantToDeleteThisLabel: 'このラベルを削除してもよろしいですか？',
++      areYouSureYouWantToDeleteThisPunctuation: 'このスコアを削除してもよろしいですか？ ',
+       areYouSureYouWantToDeleteThisList: 'このリストを削除してもよろしいですか？',
+       areYouSureYouWantToDeleteThisProject: 'このプロジェクトを削除してもよろしいですか？',
+       areYouSureYouWantToDeleteThisTask: 'このタスクを削除してもよろしいですか？',
+@@ -51,6 +52,7 @@ export default {
+       color: '色',
+       createBoard_title: 'ボードを作成',
+       createLabel_title: 'ラベルを作成',
++      createPunctuation_title: 'スコアを作成する',
+       createNewOneOrSelectExistingOne: '新規作成もしくは既存のものから選択',
+       createProject_title: 'プロジェクトを作成',
+       createTextFile_title: 'テキストファイルを作成',
+@@ -63,6 +65,7 @@ export default {
+       deleteCard_title: 'カードを削除',
+       deleteComment_title: 'コメントを削除',
+       deleteLabel_title: 'ラベルを削除',
++      deletePunctuation_title: 'スコアを削除',
+       deleteList_title: 'リストを削除',
+       deleteProject_title: 'プロジェクトを削除',
+       deleteTask_title: 'タスクを削除',
+@@ -75,6 +78,7 @@ export default {
+       editDueDate_title: '期限を編集',
+       editEmail_title: 'Eメールを編集',
+       editLabel_title: 'ラベルを編集',
++      editPunctuationtitle: 'スコアを編集する',
+       editPassword_title: 'パスワードを編集',
+       editTimer_title: 'タイマーを編集',
+       editUsername_title: 'ユーザー名を編集',
+@@ -87,12 +91,14 @@ export default {
+       enterProjectTitle: 'プロジェクトのタイトルを入力',
+       enterTaskDescription: 'タスクの説明を入力...',
+       filterByLabels_title: 'ラベルで絞り込む',
++      filterByPunctuations_title: 'スコアでフィルタリング',
+       filterByMembers_title: 'メンバーで絞り込む',
+       fromComputer_title: 'コンピューターから',
+       general: '一般',
+       hours: '時間',
+       invalidCurrentPassword: '現在のパスワードが無効',
+       labels: 'ラベル',
++      punctuations: 'スコア',
+       leaveBoard_title: 'ボードから退出',
+       leaveProject_title: 'プロジェクトから退出',
+       list: 'リスト',
+@@ -163,6 +169,8 @@ export default {
+       createFile: 'ファイルを作成',
+       createLabel: 'ラベルを作成',
+       createNewLabel: '新しいラベルを作成',
++      createPunctuation: 'スコアを作成する',
++      createNewPunctuation: '新しいスコアを作成する',
+       createProject: 'プロジェクトを作成',
+       delete: '削除',
+       deleteAttachment: '添付ファイルを削除',
+@@ -173,6 +181,7 @@ export default {
+       deleteComment: 'コメントを削除',
+       deleteImage: '画像を削除',
+       deleteLabel: 'ラベルを削除',
++      deletePunctuation: 'スコアを削除',
+       deleteList: 'リストを削除',
+       deleteList_title: 'リストを削除',
+       deleteProject: 'プロジェクトを削除',
+diff --git a/client/src/locales/pl/core.js b/client/src/locales/pl/core.js
+index 5e5789e..406f2bc 100644
+--- a/client/src/locales/pl/core.js
++++ b/client/src/locales/pl/core.js
+@@ -28,6 +28,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'Jesteś pewien że chcesz usunąć tę kartę?',
+       areYouSureYouWantToDeleteThisComment: 'Jesteś pewien że chcesz usunąć ten komentarz?',
+       areYouSureYouWantToDeleteThisLabel: 'Jesteś pewien że chcesz usunąć to oznaczenie?',
++      areYouSureYouWantToDeleteThisPunctuation: 'Jesteś pewien że chcesz usunąć to interpunkcja?',
+       areYouSureYouWantToDeleteThisList: 'Jesteś pewien że chcesz usunąć tę listę?',
+       areYouSureYouWantToDeleteThisProject: 'Jesteś pewien że chcesz usunąć ten projekt?',
+       areYouSureYouWantToDeleteThisTask: 'Jesteś pewien że chcesz usunąć to zadanie?',
+@@ -45,6 +46,7 @@ export default {
+       color: 'Kolor',
+       createBoard_title: 'Utwórz Tablicę',
+       createLabel_title: 'Utwórz Oznaczenie',
++      createPunctuation_title: 'Utwórz Interpunkcja',
+       createNewOneOrSelectExistingOne: 'Utwórz nowy lub wybierz<br />istniejący',
+       createProject_title: 'Utwórz Projekt',
+       createTextFile_title: 'Utwórz Plik Tekstowy',
+@@ -56,6 +58,7 @@ export default {
+       deleteCard_title: 'Usuń Kartę',
+       deleteComment_title: 'Usuń Komentarz',
+       deleteLabel_title: 'Usuń Oznaczenie',
++      deletePunctuation_title: 'Usuń Interpunkcja ',
+       deleteList_title: 'Usuń Listę',
+       deleteProject_title: 'Usuń Projekt',
+       deleteTask_title: 'Usuń Zadanie',
+@@ -68,6 +71,7 @@ export default {
+       editDueDate_title: 'Edytuj Termin',
+       editEmail_title: 'Edytuj E-mail',
+       editLabel_title: 'Edytuj Oznaczenie',
++      editPunctuation_title: 'Edytuj Interpunkcja ',
+       editPassword_title: 'Edytuj Hasło',
+       editTimer_title: 'Edytuj Odliczanie',
+       editUsername_title: 'Edytuj Nazwę Użytkownika',
+@@ -80,11 +84,13 @@ export default {
+       enterProjectTitle: 'Podaj tytuł projektu',
+       enterTaskDescription: 'Podaj opis zadania...',
+       filterByLabels_title: 'Filtrowanie Po Oznaczeniach',
++      filterByPunctuations_title: 'Filtrowanie Po Interpunkcja ',
+       filterByMembers_title: 'Filtrowanie Po Członkach',
+       fromComputer_title: 'Z komputera',
+       hours: 'Godzin',
+       invalidCurrentPassword: 'Błędne aktualne hasło',
+       labels: 'Oznaczenia',
++      punctuations: 'Interpunkcja',
+       list: 'Lista',
+       listActions_title: 'Akcje Listy',
+       members: 'Członkowie',
+@@ -150,6 +156,8 @@ export default {
+       createFile: 'Utwórz plik',
+       createLabel: 'Utwórz oznaczenie',
+       createNewLabel: 'Utwórz nowe oznaczenie',
++      createPunctuation: 'Utwórz interpunkcja',
++      createNewPunctuation: 'Utwórz nowe interpunkcja',
+       createProject: 'Utwórz projekt',
+       delete: 'Usuń',
+       deleteAttachment: 'Usuń załącznik',
+@@ -160,6 +168,7 @@ export default {
+       deleteComment: 'Usuń komentarz',
+       deleteImage: 'Usuń obraz',
+       deleteLabel: 'Usuń oznaczenie',
++      deletePunctuation: 'Usuń interpunkcja',
+       deleteList: 'Usuń listę',
+       deleteList_title: 'Usuń Listę',
+       deleteProject: 'Usuń projekt',
+diff --git a/client/src/locales/ru/core.js b/client/src/locales/ru/core.js
+index b595c3d..8822e78 100644
+--- a/client/src/locales/ru/core.js
++++ b/client/src/locales/ru/core.js
+@@ -28,6 +28,7 @@ export default {
+       areYouSureYouWantToDeleteThisCard: 'Вы уверены, что хотите удалить эту карточку?',
+       areYouSureYouWantToDeleteThisComment: 'Вы уверены, что хотите удалить этот комментарий?',
+       areYouSureYouWantToDeleteThisLabel: 'Вы уверены, что хотите удалить эту метку?',
++      areYouSureYouWantToDeleteThisPunctuation: 'Вы уверены, что хотите удалить эту счет?',
+       areYouSureYouWantToDeleteThisList: 'Вы уверены, что хотите удалить этот список?',
+       areYouSureYouWantToDeleteThisProject: 'Вы уверены, что хотите удалить этот проект?',
+       areYouSureYouWantToDeleteThisTask: 'Вы уверены, что хотите удалить эту задачу?',
+@@ -46,6 +47,7 @@ export default {
+       connectionRestored: 'Соединение восстановлено',
+       createBoard: 'Создание доски',
+       createLabel: 'Создание метки',
++      createPunctuation: 'Создание cчет',
+       createNewOneOrSelectExistingOne: 'Создайте новую или выберите<br />уже существующую',
+       createProject: 'Создание проекта',
+       createTextFile: 'Создание текстового файла',
+@@ -57,6 +59,7 @@ export default {
+       deleteCard: 'Удаление карточки',
+       deleteComment: 'Удаление комментария',
+       deleteLabel: 'Удаление метки',
++      deletePunctuation: 'Удаление счет',
+       deleteList: 'Удаление списка',
+       deleteProject: 'Удаление проекта',
+       deleteTask: 'Удаление задачи',
+@@ -70,6 +73,7 @@ export default {
+       editDueDate: 'Изменение срока',
+       editEmail: 'Изменение e-mail',
+       editLabel: 'Изменения метки',
++      editPunctuation: 'Изменения счет',
+       editPassword: 'Изменение пароля',
+       editTimer: 'Изменение таймера',
+       editTitle: 'Изменение названия',
+@@ -83,11 +87,13 @@ export default {
+       enterProjectTitle: 'Введите название проекта',
+       enterTaskDescription: 'Введите описание задачи...',
+       filterByLabels: 'Фильтр по меткам',
++      filterByPunctuations: 'Фильтр по счет',
+       filterByMembers: 'Фильтр по участникам',
+       fromComputer: 'С компьютера',
+       hours: 'Часы',
+       invalidCurrentPassword: 'Неверный текущий пароль',
+       labels: 'Метки',
++      punctuations: 'счет',
+       list: 'Список',
+       listActions: 'Действия со списком',
+       members: 'Участники',
+@@ -153,6 +159,8 @@ export default {
+       createFile: 'Создать файл',
+       createLabel: 'Создать метку',
+       createNewLabel: 'Создать новую метку',
++      createPunctuation: 'Создать счет',
++      createNewPunctuation: 'Создать новую счет',
+       createProject: 'Создать проект',
+       delete: 'Удалить',
+       deleteAttachment: 'Удалить вложение',
+@@ -162,6 +170,7 @@ export default {
+       deleteComment: 'Удалить комментарий',
+       deleteImage: 'Удалить изображение',
+       deleteLabel: 'Удалить метку',
++      deletePunctuation: 'Удалить счет',
+       deleteList: 'Удалить список',
+       deleteProject: 'Удалить проект',
+       deleteTask: 'Удалить задачу',
+diff --git a/client/src/models/Board.js b/client/src/models/Board.js
+index 4f6c7d2..264fab0 100755
+--- a/client/src/models/Board.js
++++ b/client/src/models/Board.js
+@@ -25,6 +25,7 @@ export default class extends Model {
+     }),
+     filterUsers: many('User', 'filterBoards'),
+     filterLabels: many('Label', 'filterBoards'),
++    filterPunctuations: many('Punctuation', 'filterPunctuations'),
+   };
+ 
+   static reducer({ type, payload }, Board) {
+@@ -162,6 +163,14 @@ export default class extends Model {
+       case ActionTypes.LABEL_FROM_BOARD_FILTER_REMOVE:
+         Board.withId(payload.boardId).filterLabels.remove(payload.id);
+ 
++        break;
++      case ActionTypes.PUNCTUATION_TO_BOARD_FILTER_ADD:
++        Board.withId(payload.boardId).filterPunctuations.add(payload.id);
++
++        break;
++      case ActionTypes.PUNCTUATION_FROM_BOARD_FILTER_REMOVE:
++        Board.withId(payload.boardId).filterPunctuations.remove(payload.id);
++
+         break;
+       default:
+     }
+@@ -191,6 +200,7 @@ export default class extends Model {
+     });
+ 
+     this.labels.delete();
++    this.punctuations.delete();
+ 
+     this.lists.toModelArray().forEach((listModel) => {
+       listModel.deleteWithRelated();
+diff --git a/client/src/models/Card.js b/client/src/models/Card.js
+index e4cebbd..3fe1326 100755
+--- a/client/src/models/Card.js
++++ b/client/src/models/Card.js
+@@ -39,6 +39,7 @@ export default class extends Model {
+     }),
+     users: many('User', 'cards'),
+     labels: many('Label', 'cards'),
++    punctuations: many('Punctuation', 'cards'),
+   };
+ 
+   static reducer({ type, payload }, Card) {
+@@ -65,6 +66,12 @@ export default class extends Model {
+           });
+         }
+ 
++        if (payload.cardPunctuations) {
++          payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
++            Card.withId(cardId).punctuations.add(punctuationId);
++          });
++        }
++
+         break;
+       case ActionTypes.SOCKET_RECONNECT_HANDLE:
+         Card.all().delete();
+@@ -87,6 +94,12 @@ export default class extends Model {
+           });
+         }
+ 
++        if (payload.cardPunctuations) {
++          payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
++            Card.withId(cardId).punctuations.add(punctuationId);
++          });
++        }
++
+         break;
+       case ActionTypes.USER_TO_CARD_ADD: {
+         const cardModel = Card.withId(payload.cardId);
+@@ -129,10 +142,18 @@ export default class extends Model {
+           Card.withId(cardId).labels.add(labelId);
+         });
+ 
++        payload.cardPunctuations.forEach(({ cardId, punctuationId }) => {
++          Card.withId(cardId).punctuations.add(punctuationId);
++        });
++
+         break;
+       case ActionTypes.LABEL_TO_CARD_ADD:
+         Card.withId(payload.cardId).labels.add(payload.id);
+ 
++        break;
++      case ActionTypes.PUNCTUATION_TO_CARD_ADD:
++        Card.withId(payload.cardId).punctuations.add(payload.id);
++
+         break;
+       case ActionTypes.LABEL_TO_CARD_ADD__SUCCESS:
+       case ActionTypes.LABEL_TO_CARD_ADD_HANDLE:
+@@ -140,10 +161,22 @@ export default class extends Model {
+           Card.withId(payload.cardLabel.cardId).labels.add(payload.cardLabel.labelId);
+         } catch {} // eslint-disable-line no-empty
+ 
++        break;
++      case ActionTypes.PUNCTUATION_TO_CARD_ADD__SUCCESS:
++      case ActionTypes.PUNCTUATION_TO_CARD_ADD_HANDLE:
++        try {
++          // eslint-disable-next-line prettier/prettier
++          Card.withId(payload.cardPunctuation.cardId).punctuations.add(payload.cardPunctuation.punctuationId);
++        } catch {} // eslint-disable-line no-empty
++
+         break;
+       case ActionTypes.LABEL_FROM_CARD_REMOVE:
+         Card.withId(payload.cardId).labels.remove(payload.id);
+ 
++        break;
++      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE:
++        Card.withId(payload.cardId).punctuations.remove(payload.id);
++
+         break;
+       case ActionTypes.LABEL_FROM_CARD_REMOVE__SUCCESS:
+       case ActionTypes.LABEL_FROM_CARD_REMOVE_HANDLE:
+@@ -151,6 +184,15 @@ export default class extends Model {
+           Card.withId(payload.cardLabel.cardId).labels.remove(payload.cardLabel.labelId);
+         } catch {} // eslint-disable-line no-empty
+ 
++        break;
++      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE__SUCCESS:
++      case ActionTypes.PUNCTUATION_FROM_CARD_REMOVE_HANDLE:
++        try {
++          // eslint-disable-next-line prettier/prettier
++          Card.withId(payload.cardPunctuation.cardId).punctuations.remove(payload.cardPunctuation.punctuationId);
++          // eslint-disable-next-line no-empty
++        } catch {}
++
+         break;
+       case ActionTypes.CARD_CREATE:
+       case ActionTypes.CARD_CREATE_HANDLE:
+diff --git a/client/src/models/List.js b/client/src/models/List.js
+index 73e46e1..ee92891 100755
+--- a/client/src/models/List.js
++++ b/client/src/models/List.js
+@@ -1,3 +1,4 @@
++/* eslint-disable prettier/prettier */
+ import { Model, attr, fk } from 'redux-orm';
+ 
+ import ActionTypes from '../constants/ActionTypes';
+@@ -88,6 +89,7 @@ export default class extends Model {
+ 
+     const filterUserIds = this.board.filterUsers.toRefArray().map((user) => user.id);
+     const filterLabelIds = this.board.filterLabels.toRefArray().map((label) => label.id);
++    const filterPunctuationIds = this.board.filterPunctuations.toRefArray().map((punctuation) => punctuation.id);
+ 
+     if (filterUserIds.length > 0) {
+       cardModels = cardModels.filter((cardModel) => {
+@@ -105,6 +107,14 @@ export default class extends Model {
+       });
+     }
+ 
++    if (filterPunctuationIds.length > 0) {
++      cardModels = cardModels.filter((cardModel) => {
++        const punctuations = cardModel.punctuations.toRefArray();
++
++        return punctuations.some((punctuation) => filterPunctuationIds.includes(punctuation.id));
++      });
++    }
++
+     return cardModels;
+   }
+ 
+diff --git a/client/src/models/index.js b/client/src/models/index.js
+index e426524..14b8875 100755
+--- a/client/src/models/index.js
++++ b/client/src/models/index.js
+@@ -4,6 +4,7 @@ import ProjectManager from './ProjectManager';
+ import Board from './Board';
+ import BoardMembership from './BoardMembership';
+ import Label from './Label';
++import Punctuation from './Punctuation';
+ import List from './List';
+ import Card from './Card';
+ import Task from './Task';
+@@ -18,6 +19,7 @@ export {
+   Board,
+   BoardMembership,
+   Label,
++  Punctuation,
+   List,
+   Card,
+   Task,
+diff --git a/client/src/orm.js b/client/src/orm.js
+index 9857a60..5f7ea92 100755
+--- a/client/src/orm.js
++++ b/client/src/orm.js
+@@ -6,6 +6,7 @@ import {
+   Board,
+   BoardMembership,
+   Card,
++  Punctuation,
+   Label,
+   List,
+   Notification,
+@@ -25,6 +26,7 @@ orm.register(
+   ProjectManager,
+   Board,
+   BoardMembership,
++  Punctuation,
+   Label,
+   List,
+   Card,
+diff --git a/client/src/sagas/core/requests/board.js b/client/src/sagas/core/requests/board.js
+index d037390..1407243 100644
+--- a/client/src/sagas/core/requests/board.js
++++ b/client/src/sagas/core/requests/board.js
+@@ -14,10 +14,12 @@ export function* fetchBoardByCurrentPathRequest() {
+   let users;
+   let projects;
+   let boardMemberships;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -40,10 +42,12 @@ export function* fetchBoardByCurrentPathRequest() {
+           users,
+           projects,
+           boardMemberships,
++          punctuations,
+           labels,
+           lists,
+           cards,
+           cardMemberships,
++          cardPunctuations,
+           cardLabels,
+           tasks,
+           attachments,
+@@ -57,10 +61,12 @@ export function* fetchBoardByCurrentPathRequest() {
+     card,
+     users,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/sagas/core/requests/core.js b/client/src/sagas/core/requests/core.js
+index 9f9bd8b..8d8bd22 100644
+--- a/client/src/sagas/core/requests/core.js
++++ b/client/src/sagas/core/requests/core.js
+@@ -20,10 +20,12 @@ export function* fetchCoreRequest() {
+   let users2;
+   let projects2;
+   let boardMemberships2;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards1;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -35,10 +37,12 @@ export function* fetchCoreRequest() {
+       users: users2,
+       projects: projects2,
+       boardMemberships: boardMemberships2,
++      punctuations,
+       labels,
+       lists,
+       cards: cards1,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+@@ -74,9 +78,11 @@ export function* fetchCoreRequest() {
+     board,
+     projectManagers,
+     boards,
++    punctuations,
+     labels,
+     lists,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+diff --git a/client/src/sagas/core/services/board-membership.js b/client/src/sagas/core/services/board-membership.js
+index 617b796..bf802db 100644
+--- a/client/src/sagas/core/services/board-membership.js
++++ b/client/src/sagas/core/services/board-membership.js
+@@ -61,10 +61,12 @@ export function* handleBoardMembershipCreateService(boardMembership) {
+   let boards;
+   let boardMemberships1;
+   let boardMemberships2;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -102,10 +104,12 @@ export function* handleBoardMembershipCreateService(boardMembership) {
+         board: board1,
+         users: users2,
+         boardMemberships: boardMemberships2,
++        punctuations,
+         labels,
+         lists,
+         cards,
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+@@ -132,10 +136,12 @@ export function* handleBoardMembershipCreateService(boardMembership) {
+       projectManagers,
+       boards,
+       mergeRecords(boardMemberships1, boardMemberships2),
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/services/board.js b/client/src/sagas/core/services/board.js
+index 732d10c..3cdc1a2 100644
+--- a/client/src/sagas/core/services/board.js
++++ b/client/src/sagas/core/services/board.js
+@@ -65,10 +65,12 @@ export function* fetchBoardService(id) {
+   let users;
+   let projects;
+   let boardMemberships;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -80,10 +82,12 @@ export function* fetchBoardService(id) {
+         users,
+         projects,
+         boardMemberships,
++        punctuations,
+         labels,
+         lists,
+         cards,
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+@@ -100,10 +104,12 @@ export function* fetchBoardService(id) {
+       users,
+       projects,
+       boardMemberships,
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/services/core.js b/client/src/sagas/core/services/core.js
+index 1e59a4f..edb7289 100644
+--- a/client/src/sagas/core/services/core.js
++++ b/client/src/sagas/core/services/core.js
+@@ -14,10 +14,12 @@ export function* initializeCoreService() {
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+@@ -36,10 +38,12 @@ export function* initializeCoreService() {
+       projectManagers,
+       boards,
+       boardMemberships,
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/services/index.js b/client/src/sagas/core/services/index.js
+index 161add4..b823803 100644
+--- a/client/src/sagas/core/services/index.js
++++ b/client/src/sagas/core/services/index.js
+@@ -9,6 +9,7 @@ export * from './project-manager';
+ export * from './board';
+ export * from './board-membership';
+ export * from './label';
++export * from './punctuation';
+ export * from './list';
+ export * from './card';
+ export * from './task';
+diff --git a/client/src/sagas/core/services/label.js b/client/src/sagas/core/services/label.js
+index aa16945..ceca676 100644
+--- a/client/src/sagas/core/services/label.js
++++ b/client/src/sagas/core/services/label.js
+@@ -21,6 +21,8 @@ import { createLocalId } from '../../../utils/local-id';
+ 
+ export function* createLabelService(boardId, data) {
+   const localId = yield call(createLocalId);
++  // eslint-disable-next-line no-console
++  console.log('testeeee');
+ 
+   yield put(
+     createLabel({
+diff --git a/client/src/sagas/core/services/list.js b/client/src/sagas/core/services/list.js
+index 6238927..9686281 100644
+--- a/client/src/sagas/core/services/list.js
++++ b/client/src/sagas/core/services/list.js
+@@ -46,10 +46,14 @@ export function* createListInCurrentBoardService(data) {
+   yield call(createListService, boardId, data);
+ }
+ 
+-export function* handleListCreateService(label) {
+-  yield put(handleListCreate(label));
++export function* handleListCreateService(label, punctuation) {
++  yield put(handleListCreate(label, punctuation));
+ }
+ 
++/* export function* handleListCreateService(punctuation) {
++  yield put(handleListCreate(punctuation));
++} */
++
+ export function* updateListService(id, data) {
+   yield put(updateList(id, data));
+ 
+@@ -73,8 +77,8 @@ export function* moveListService(id, index) {
+   });
+ }
+ 
+-export function* handleListUpdateService(label) {
+-  yield put(handleListUpdate(label));
++export function* handleListUpdateService(label, punctuation) {
++  yield put(handleListUpdate(label, punctuation));
+ }
+ 
+ export function* deleteListService(id) {
+@@ -91,6 +95,6 @@ export function* deleteListService(id) {
+   yield put(deleteList.success(list));
+ }
+ 
+-export function* handleListDeleteService(label) {
+-  yield put(handleListDelete(label));
++export function* handleListDeleteService(label, punctuation) {
++  yield put(handleListDelete(label, punctuation));
+ }
+diff --git a/client/src/sagas/core/services/project-manager.js b/client/src/sagas/core/services/project-manager.js
+index 991fefe..83ab2b8 100644
+--- a/client/src/sagas/core/services/project-manager.js
++++ b/client/src/sagas/core/services/project-manager.js
+@@ -58,10 +58,12 @@ export function* handleProjectManagerCreateService(projectManager) {
+   let boards;
+   let boardMemberships1;
+   let boardMemberships2;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -94,10 +96,12 @@ export function* handleProjectManagerCreateService(projectManager) {
+         board,
+         users: users2,
+         boardMemberships: boardMemberships2,
++        punctuations,
+         labels,
+         lists,
+         cards,
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+@@ -124,10 +128,12 @@ export function* handleProjectManagerCreateService(projectManager) {
+       projectManagers,
+       boards,
+       mergeRecords(boardMemberships1, boardMemberships2),
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/services/router.js b/client/src/sagas/core/services/router.js
+index 7ed31e6..8f4bdd1 100644
+--- a/client/src/sagas/core/services/router.js
++++ b/client/src/sagas/core/services/router.js
+@@ -54,10 +54,12 @@ export function* handleLocationChangeService() {
+   let users;
+   let projects;
+   let boardMemberships;
++  let punctuations;
+   let labels;
+   let lists;
+   let cards;
+   let cardMemberships;
++  let cardPunctuations;
+   let cardLabels;
+   let tasks;
+   let attachments;
+@@ -78,10 +80,12 @@ export function* handleLocationChangeService() {
+               users,
+               projects,
+               boardMemberships,
++              punctuations,
+               labels,
+               lists,
+               cards,
+               cardMemberships,
++              cardPunctuations,
+               cardLabels,
+               tasks,
+               attachments,
+@@ -118,10 +122,12 @@ export function* handleLocationChangeService() {
+       users,
+       projects,
+       boardMemberships,
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/services/socket.js b/client/src/sagas/core/services/socket.js
+index 2b4eac7..c430554 100644
+--- a/client/src/sagas/core/services/socket.js
++++ b/client/src/sagas/core/services/socket.js
+@@ -22,10 +22,12 @@ export function* handleSocketReconnectService() {
+     projectManagers,
+     boards,
+     boardMemberships,
++    punctuations,
+     labels,
+     lists,
+     cards,
+     cardMemberships,
++    cardPunctuations,
+     cardLabels,
+     tasks,
+     attachments,
+@@ -42,10 +44,12 @@ export function* handleSocketReconnectService() {
+       projectManagers,
+       boards,
+       boardMemberships,
++      punctuations,
+       labels,
+       lists,
+       cards,
+       cardMemberships,
++      cardPunctuations,
+       cardLabels,
+       tasks,
+       attachments,
+diff --git a/client/src/sagas/core/watchers/index.js b/client/src/sagas/core/watchers/index.js
+index 27c81c1..4e0e473 100755
+--- a/client/src/sagas/core/watchers/index.js
++++ b/client/src/sagas/core/watchers/index.js
+@@ -9,6 +9,7 @@ import projectManager from './project-manager';
+ import board from './board';
+ import boardMembership from './board-membership';
+ import label from './label';
++import punctuation from './punctuation';
+ import list from './list';
+ import card from './card';
+ import task from './task';
+@@ -29,6 +30,7 @@ export default [
+   projectManager,
+   board,
+   boardMembership,
++  punctuation,
+   label,
+   list,
+   card,
+diff --git a/client/src/sagas/core/watchers/socket.js b/client/src/sagas/core/watchers/socket.js
+index 0bbc18a..3bbce1a 100644
+--- a/client/src/sagas/core/watchers/socket.js
++++ b/client/src/sagas/core/watchers/socket.js
+@@ -13,6 +13,9 @@ import {
+   handleListCreate as handleListCreateAction,
+   handleListUpdate as handleListUpdateAction,
+   handleListDelete as handleListDeleteAction,
++  handlePunctuationCreate as handlePunctuationCreateAction,
++  handlePunctuationUpdate as handlePunctuationUpdateAction,
++  handlePunctuationDelete as handlePunctuationDeleteAction,
+   handleLabelCreate as handleLabelCreateAction,
+   handleLabelUpdate as handleLabelUpdateAction,
+   handleLabelDelete as handleLabelDeleteAction,
+@@ -21,6 +24,8 @@ import {
+   handleCardDelete as handleCardDeleteAction,
+   handleUserToCardAdd as handleUserToCardAddAction,
+   handleUserFromCardRemove as handleUserFromCardRemoveAction,
++  handlePunctuationToCardAdd as handlePunctuationToCardAddAction,
++  handlePunctuationFromCardRemove as handlePunctuationFromCardRemoveAction,
+   handleLabelToCardAdd as handleLabelToCardAddAction,
+   handleLabelFromCardRemove as handleLabelFromCardRemoveAction,
+   handleTaskCreate as handleTaskCreateAction,
+@@ -120,6 +125,18 @@ const createSocketEventsChannel = () =>
+       emit(handleListDeleteAction(item));
+     };
+ 
++    const handlePunctuationCreate = ({ item }) => {
++      emit(handlePunctuationCreateAction(item));
++    };
++
++    const handlePunctuationUpdate = ({ item }) => {
++      emit(handlePunctuationUpdateAction(item));
++    };
++
++    const handlePunctuationDelete = ({ item }) => {
++      emit(handlePunctuationDeleteAction(item));
++    };
++
+     const handleLabelCreate = ({ item }) => {
+       emit(handleLabelCreateAction(item));
+     };
+@@ -152,6 +169,14 @@ const createSocketEventsChannel = () =>
+       emit(handleUserFromCardRemoveAction(item));
+     };
+ 
++    const handlePunctuationToCardAdd = ({ item }) => {
++      emit(handlePunctuationToCardAddAction(item));
++    };
++
++    const handlePunctuationFromCardRemove = ({ item }) => {
++      emit(handlePunctuationFromCardRemoveAction(item));
++    };
++
+     const handleLabelToCardAdd = ({ item }) => {
+       emit(handleLabelToCardAddAction(item));
+     };
+@@ -229,6 +254,10 @@ const createSocketEventsChannel = () =>
+     socket.on('listUpdate', handleListUpdate);
+     socket.on('listDelete', handleListDelete);
+ 
++    socket.on('punctuationCreate', handlePunctuationCreate);
++    socket.on('punctuationUpdate', handlePunctuationUpdate);
++    socket.on('punctuationDelete', handlePunctuationDelete);
++
+     socket.on('labelCreate', handleLabelCreate);
+     socket.on('labelUpdate', handleLabelUpdate);
+     socket.on('labelDelete', handleLabelDelete);
+@@ -240,6 +269,9 @@ const createSocketEventsChannel = () =>
+     socket.on('cardMembershipCreate', handleUserToCardAdd);
+     socket.on('cardMembershipDelete', handleUserFromCardRemove);
+ 
++    socket.on('cardPunctuationCreate', handlePunctuationToCardAdd);
++    socket.on('cardPunctuationDelete', handlePunctuationFromCardRemove);
++
+     socket.on('cardLabelCreate', handleLabelToCardAdd);
+     socket.on('cardLabelDelete', handleLabelFromCardRemove);
+ 
+@@ -284,6 +316,10 @@ const createSocketEventsChannel = () =>
+       socket.off('listUpdate', handleListUpdate);
+       socket.off('listDelete', handleListDelete);
+ 
++      socket.off('punctuationCreate', handlePunctuationCreate);
++      socket.off('punctuationUpdate', handlePunctuationUpdate);
++      socket.off('punctuationDelete', handlePunctuationDelete);
++
+       socket.off('labelCreate', handleLabelCreate);
+       socket.off('labelUpdate', handleLabelUpdate);
+       socket.off('labelDelete', handleLabelDelete);
+@@ -295,6 +331,9 @@ const createSocketEventsChannel = () =>
+       socket.off('cardMembershipCreate', handleUserToCardAdd);
+       socket.off('cardMembershipDelete', handleUserFromCardRemove);
+ 
++      socket.off('cardPunctuationCreate', handlePunctuationToCardAdd);
++      socket.off('cardPunctuationDelete', handlePunctuationFromCardRemove);
++
+       socket.off('cardLabelCreate', handleLabelToCardAdd);
+       socket.off('cardLabelDelete', handleLabelFromCardRemove);
+ 
+diff --git a/client/src/selectors/board.js b/client/src/selectors/board.js
+index 740a19d..7e7c0a2 100644
+--- a/client/src/selectors/board.js
++++ b/client/src/selectors/board.js
+@@ -90,6 +90,27 @@ export const labelsForCurrentBoardSelector = createSelector(
+   },
+ );
+ 
++export const punctuationsForCurrentBoardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).boardId,
++  ({ Board }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const boardModel = Board.withId(id);
++
++    if (!boardModel) {
++      return boardModel;
++    }
++
++    return boardModel.punctuations.toRefArray().map((punctuation) => ({
++      ...punctuation,
++      isPersisted: !isLocalId(punctuation.id),
++    }));
++  },
++);
++
+ export const listIdsForCurrentBoardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).boardId,
+@@ -147,6 +168,24 @@ export const filterLabelsForCurrentBoardSelector = createSelector(
+   },
+ );
+ 
++export const filterPunctuationsForCurrentBoardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).boardId,
++  ({ Board }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const boardModel = Board.withId(id);
++
++    if (!boardModel) {
++      return boardModel;
++    }
++
++    return boardModel.filterPunctuations.toRefArray();
++  },
++);
++
+ export const isCurrentUserMemberForCurrentBoardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).boardId,
+diff --git a/client/src/selectors/card.js b/client/src/selectors/card.js
+index dd7de70..6dc0eae 100644
+--- a/client/src/selectors/card.js
++++ b/client/src/selectors/card.js
+@@ -60,6 +60,23 @@ export const makeLabelsByCardIdSelector = () =>
+ 
+ export const labelsByCardIdSelector = makeLabelsByCardIdSelector();
+ 
++export const makePunctuationsByCardIdSelector = () =>
++  createSelector(
++    orm,
++    (_, id) => id,
++    ({ Card }, id) => {
++      const cardModel = Card.withId(id);
++
++      if (!cardModel) {
++        return cardModel;
++      }
++
++      return cardModel.punctuations.toRefArray();
++    },
++  );
++
++export const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
++
+ export const makeTasksByCardIdSelector = () =>
+   createSelector(
+     orm,
+@@ -184,6 +201,24 @@ export const labelsForCurrentCardSelector = createSelector(
+   },
+ );
+ 
++export const punctuationsForCurrentCardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).cardId,
++  ({ Card }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const cardModel = Card.withId(id);
++
++    if (!cardModel) {
++      return cardModel;
++    }
++
++    return cardModel.punctuations.toRefArray();
++  },
++);
++
+ export const tasksForCurrentCardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).cardId,
+diff --git a/client/src/setupTests.js b/client/src/setupTests.js
+index b5adb88..1b36f1d 100644
+--- a/client/src/setupTests.js
++++ b/client/src/setupTests.js
+@@ -1,6 +1,9 @@
++// eslint-disable-next-line import/no-extraneous-dependencies
+ import { configure } from 'enzyme';
++// eslint-disable-next-line import/no-extraneous-dependencies
+ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+ 
++// eslint-disable-next-line import/no-extraneous-dependencies
+ import 'jest-enzyme';
+ 
+ configure({ adapter: new Adapter() });
+diff --git a/package.json b/package.json
+index c6999cf..6f130bb 100644
+--- a/package.json
++++ b/package.json
+@@ -42,7 +42,10 @@
+   },
+   "dependencies": {
+     "concurrently": "^6.2.0",
++    "express": "^4.17.1",
+     "husky": "^7.0.1",
+-    "lint-staged": "^11.1.1"
++    "knex": "^0.95.14",
++    "lint-staged": "^11.1.1",
++    "pg": "^8.7.1"
+   }
+ }
+diff --git a/server/api/controllers/boards/show.js b/server/api/controllers/boards/show.js
+index 8fbb017..ea3f624 100755
+--- a/server/api/controllers/boards/show.js
++++ b/server/api/controllers/boards/show.js
+@@ -50,6 +50,7 @@ module.exports = {
+     const users = await sails.helpers.users.getMany(userIds);
+ 
+     const labels = await sails.helpers.boards.getLabels(board.id);
++    const punctuations = await sails.helpers.boards.getPunctuations(board.id);
+     const lists = await sails.helpers.boards.getLists(board.id);
+ 
+     const cards = await sails.helpers.boards.getCards(board);
+@@ -61,6 +62,7 @@ module.exports = {
+     });
+ 
+     const cardMemberships = await sails.helpers.cards.getCardMemberships(cardIds);
++    const cardPunctuations = await sails.helpers.cards.getCardPunctuations(cardIds);
+     const cardLabels = await sails.helpers.cards.getCardLabels(cardIds);
+     const tasks = await sails.helpers.cards.getTasks(cardIds);
+     const attachments = await sails.helpers.cards.getAttachments(cardIds);
+@@ -84,10 +86,12 @@ module.exports = {
+       included: {
+         users,
+         boardMemberships,
++        punctuations,
+         labels,
+         lists,
+         cards,
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+diff --git a/server/api/controllers/cards/index.js b/server/api/controllers/cards/index.js
+index 1515a7a..cf0c4d4 100644
+--- a/server/api/controllers/cards/index.js
++++ b/server/api/controllers/cards/index.js
+@@ -57,6 +57,7 @@ module.exports = {
+     });
+ 
+     const cardMemberships = await sails.helpers.cards.getCardMemberships(cardIds);
++    const cardPunctuations = await sails.helpers.cards.getCardPunctuations(cardIds);
+     const cardLabels = await sails.helpers.cards.getCardLabels(cardIds);
+     const tasks = await sails.helpers.cards.getTasks(cardIds);
+     const attachments = await sails.helpers.cards.getAttachments(cardIds);
+@@ -65,6 +66,7 @@ module.exports = {
+       items: cards,
+       included: {
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+diff --git a/server/api/controllers/cards/show.js b/server/api/controllers/cards/show.js
+index bc37eb0..b3a806a 100755
+--- a/server/api/controllers/cards/show.js
++++ b/server/api/controllers/cards/show.js
+@@ -42,6 +42,7 @@ module.exports = {
+     card.isSubscribed = await sails.helpers.users.isCardSubscriber(currentUser.id, card.id);
+ 
+     const cardMemberships = await sails.helpers.cards.getCardMemberships(card.id);
++    const cardPunctuations = await sails.helpers.cards.getCardPunctuations(card.id);
+     const cardLabels = await sails.helpers.cards.getCardLabels(card.id);
+     const tasks = await sails.helpers.cards.getTasks(card.id);
+     const attachments = await sails.helpers.cards.getAttachments(card.id);
+@@ -50,6 +51,7 @@ module.exports = {
+       item: card,
+       included: {
+         cardMemberships,
++        cardPunctuations,
+         cardLabels,
+         tasks,
+         attachments,
+diff --git a/server/api/helpers/cards/update-one.js b/server/api/helpers/cards/update-one.js
+index 42e1b18..32ecb61 100644
+--- a/server/api/helpers/cards/update-one.js
++++ b/server/api/helpers/cards/update-one.js
+@@ -137,6 +137,7 @@ module.exports = {
+ 
+     let card;
+     if (!_.isEmpty(values)) {
++      let prevPunctuations;
+       let prevLabels;
+       if (inputs.nextBoard) {
+         if (inputs.nextBoard.projectId !== inputs.board.projectId) {
+@@ -157,8 +158,13 @@ module.exports = {
+           });
+         }
+ 
++        prevPunctuations = await sails.helpers.cards.getPunctuations(inputs.record.id);
+         prevLabels = await sails.helpers.cards.getLabels(inputs.record.id);
+ 
++        await CardPunctuation.destroy({
++          cardId: inputs.record.id,
++        });
++
+         await CardLabel.destroy({
+           cardId: inputs.record.id,
+         });
+@@ -171,9 +177,26 @@ module.exports = {
+       }
+ 
+       if (inputs.nextBoard) {
++        const punctuations = await sails.helpers.boards.getPunctuations(card.boardId);
++        const punctuationByNameMap = _.keyBy(punctuations, 'name');
+         const labels = await sails.helpers.boards.getLabels(card.boardId);
+         const labelByNameMap = _.keyBy(labels, 'name');
+ 
++        const punctuationIds = await Promise.all(
++          prevPunctuations.map(async (prevPunctuation) => {
++            if (punctuationByNameMap[prevPunctuation.name]) {
++              return punctuationByNameMap[prevPunctuation.name].id;
++            }
++
++            const { id } = await sails.helpers.punctuations.createOne(
++              _.omit(prevPunctuation, ['id', 'boardId']),
++              inputs.nextBoard,
++            );
++
++            return id;
++          }),
++        );
++
+         const labelIds = await Promise.all(
+           prevLabels.map(async (prevLabel) => {
+             if (labelByNameMap[prevLabel.name]) {
+@@ -189,6 +212,17 @@ module.exports = {
+           }),
+         );
+ 
++        await Promise.all(
++          punctuationIds.map(async (punctuationId) =>
++            CardPunctuation.create({
++              punctuationId,
++              cardId: card.id,
++            })
++              .tolerate('E_UNIQUE')
++              .fetch(),
++          ),
++        );
++
+         await Promise.all(
+           labelIds.map(async (labelId) =>
+             CardLabel.create({
+diff --git a/server/api/models/Board.js b/server/api/models/Board.js
+index 9ad16c5..62af844 100755
+--- a/server/api/models/Board.js
++++ b/server/api/models/Board.js
+@@ -54,6 +54,10 @@ module.exports = {
+       collection: 'List',
+       via: 'boardId',
+     },
++    punctuations: {
++      collection: 'Punctuation',
++      via: 'boardId',
++    },
+     labels: {
+       collection: 'Label',
+       via: 'boardId',
+diff --git a/server/api/models/Card.js b/server/api/models/Card.js
+index d32516b..042db0f 100755
+--- a/server/api/models/Card.js
++++ b/server/api/models/Card.js
+@@ -67,6 +67,11 @@ module.exports = {
+       via: 'cardId',
+       through: 'CardMembership',
+     },
++    punctuations: {
++      collection: 'Punctuation',
++      via: 'cardId',
++      through: 'CardPunctuation',
++    },
+     labels: {
+       collection: 'Label',
+       via: 'cardId',
+diff --git a/server/config/routes.js b/server/config/routes.js
+index 922251f..5ae76d7 100644
+--- a/server/config/routes.js
++++ b/server/config/routes.js
+@@ -39,6 +39,10 @@ module.exports.routes = {
+   'POST /api/boards/:boardId/memberships': 'board-memberships/create',
+   'DELETE /api/board-memberships/:id': 'board-memberships/delete',
+ 
++  'POST /api/boards/:boardId/punctuations': 'punctuations/create',
++  'PATCH /api/punctuations/:id': 'punctuations/update',
++  'DELETE /api/punctuations/:id': 'punctuations/delete',
++
+   'POST /api/boards/:boardId/labels': 'labels/create',
+   'PATCH /api/labels/:id': 'labels/update',
+   'DELETE /api/labels/:id': 'labels/delete',
+@@ -54,6 +58,8 @@ module.exports.routes = {
+   'DELETE /api/cards/:id': 'cards/delete',
+   'POST /api/cards/:cardId/memberships': 'card-memberships/create',
+   'DELETE /api/cards/:cardId/memberships': 'card-memberships/delete',
++  'POST /api/cards/:cardId/punctuations': 'card-punctuations/create',
++  'DELETE /api/cards/:cardId/punctuations/:punctuationsId': 'card-punctuations/delete',
+   'POST /api/cards/:cardId/labels': 'card-labels/create',
+   'DELETE /api/cards/:cardId/labels/:labelId': 'card-labels/delete',
+ 

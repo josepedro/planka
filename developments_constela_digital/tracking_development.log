@@ -1,0 +1,111 @@
+done - a/client/src/locales/cs/core.js
+done - a/client/src/locales/en/core.js
+done - a/client/src/locales/es/core.js
+done - a/client/src/locales/fr/core.js
+done - a/client/src/locales/ja/core.js
+done - a/client/src/locales/pl/core.js
+done - a/client/src/locales/ru/core.js
+
+patch created, applied and it's working for client/src/locales!
+
+-------
+
+a/client/src/api/index.js
+
+# New Bug appeared! When we want to create new cards for example, after new developments for adding the new punctuation, planka starts hiding or not displaying new cards and so on. We need to refresh the page in order to get the new cards created.
+
+modifications implemented and index is working well. But there is no communcations with backend concerning punctuation.
+
+--------
+
+In the case that we want to modify the style in order to know where we are touching, we can see the following files:
+These codes were not merged!
+
+a/client/src/components/CardModal/CardModal.module.scss
+a/client/src/components/LabelsStep/Editor.module.scss
+a/client/src/components/LabelsStep/Item.module.scss
+a/client/src/components/LabelsStep/LabelsStep.module.scss
+
+--------
+
+Now let's try to merge the constants by using patch_constants.diff:
+a/client/src/constants/ActionTypes.js
+a/client/src/constants/EntryActionTypes.js
+
+[client] Compiling...
+[client] Compiled successfully!
+
+=D
+
+--------
+
+Now let's try to merge the indexes by using patch_indexes.diff:
+a/client/src/actions/entry/index.js
+a/client/src/actions/index.js
+
+[client] Compiling...
+[client] Failed to compile.
+[client] 
+[client] ./src/actions/index.js
+[client] Module not found: Can't resolve './punctuation' in '/home/pedro/planka_ponctuation/planka/client/src/actions'
+
+Now we need to create punctuation files.
+We created the files but we need to ensure that the files should be created in advance and then, after that, exported.
+
+--------
+
+Now let's try to merge the models by using patch_models.diff:
+a/client/src/models/Board.js vai da pau
+a/client/src/models/Card.js nao da pau
+a/client/src/models/List.js da pau
+a/client/src/models/index.js da pau
+a/client/src/orm.js
+
+[client] Compiling...
+[client] Compiled successfully!
+
+=D
+
+--------
+
+Now let's try to merge the selectors by using patch_selectors.diff:
+a/client/src/selectors/board.js
+a/client/src/selectors/card.js
+
+[client] Compiling...
+[client] Compiled successfully!
+
+=D
+
+--------
+
+Now let's try to merge the containers by using patch_containers.diff:
+a/client/src/containers/BoardActionsContainer.js
+a/client/src/containers/CardContainer.js
+a/client/src/containers/CardModalContainer.js
+
+[client] Compiling...
+[client] Compiled successfully!
+
+=D
+
+--------
+
+Now let's try to merge the components by using patch_components.diff:
+a/client/src/components/BoardActions/BoardActions.jsx
+a/client/src/components/BoardActions/Filters.jsx
+a/client/src/components/Card/ActionsPopup.jsx
+a/client/src/components/Card/Card.jsx
+a/client/src/components/CardModal/CardModal.jsx
+
+[client] Compiling...
+[client] Failed to compile.
+[client] 
+[client] ./src/components/PunctuationsPopup.jsx
+[client] Module not found: Can't resolve './PunctuationsStep' in '/home/pedro/planka_ponctuation/planka/client/src/components'
+[client] Compiling...
+[client] Failed to compile.
+[client] 
+[client] ./src/components/Card/ActionsPopup.jsx
+[client] Module not found: Can't resolve '../PunctuationsStep' in '/home/pedro/planka_ponctuation/planka/client/src/components/Card'
+

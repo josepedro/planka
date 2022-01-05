@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import User from '../User';
+import Punctuation from '../Punctuation';
 import Label from '../Label';
 import BoardMembershipsPopup from '../BoardMembershipsPopup';
+import PunctuationsPopup from '../PunctuationsPopup';
 import LabelsPopup from '../LabelsPopup';
 
 import styles from './Filters.module.scss';
@@ -12,11 +14,18 @@ import styles from './Filters.module.scss';
 const Filters = React.memo(
   ({
     users,
+    punctuations,
     labels,
     allBoardMemberships,
+    allPunctuations,
     allLabels,
     onUserAdd,
     onUserRemove,
+    onPunctuationAdd,
+    onPunctuationRemove,
+    onPunctuationCreate,
+    onPunctuationUpdate,
+    onPunctuationDelete,
     onLabelAdd,
     onLabelRemove,
     onLabelCreate,
@@ -37,6 +46,13 @@ const Filters = React.memo(
         onLabelRemove(id);
       },
       [onLabelRemove],
+    );
+
+    const handleRemovePunctuationClick = useCallback(
+      (id) => {
+        onPunctuationRemove(id);
+      },
+      [onPunctuationRemove],
     );
 
     return (
@@ -96,6 +112,37 @@ const Filters = React.memo(
             </span>
           ))}
         </span>
+        <span className={styles.filter}>
+          <PunctuationsPopup
+            items={allPunctuations}
+            currentIds={punctuations.map((punctuation) => punctuation.id)}
+            title={t('common.filterByPunctuations', {
+              context: 'title',
+            })}
+            onSelect={onPunctuationAdd}
+            onDeselect={onPunctuationRemove}
+            onCreate={onPunctuationCreate}
+            onUpdate={onPunctuationUpdate}
+            onDelete={onPunctuationDelete}
+          >
+            <button type="button" className={styles.filterButton}>
+              <span className={styles.filterTitle}>{`${t('common.punctuations')}:`}</span>
+              {punctuations.length === 0 && (
+                <span className={styles.filterLabel}>{t('common.all')}</span>
+              )}
+            </button>
+          </PunctuationsPopup>
+          {punctuations.map((punctuation) => (
+            <span key={punctuation.id} className={styles.filterItem}>
+              <Punctuation
+                name={punctuation.name}
+                color={punctuation.color}
+                size="small"
+                onClick={() => handleRemovePunctuationClick(punctuation.id)}
+              />
+            </span>
+          ))}
+        </span>
       </>
     );
   },
@@ -104,12 +151,19 @@ const Filters = React.memo(
 Filters.propTypes = {
   /* eslint-disable react/forbid-prop-types */
   users: PropTypes.array.isRequired,
+  punctuations: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired,
   allBoardMemberships: PropTypes.array.isRequired,
+  allPunctuations: PropTypes.array.isRequired,
   allLabels: PropTypes.array.isRequired,
   /* eslint-enable react/forbid-prop-types */
   onUserAdd: PropTypes.func.isRequired,
   onUserRemove: PropTypes.func.isRequired,
+  onPunctuationAdd: PropTypes.func.isRequired,
+  onPunctuationRemove: PropTypes.func.isRequired,
+  onPunctuationCreate: PropTypes.func.isRequired,
+  onPunctuationUpdate: PropTypes.func.isRequired,
+  onPunctuationDelete: PropTypes.func.isRequired,
   onLabelAdd: PropTypes.func.isRequired,
   onLabelRemove: PropTypes.func.isRequired,
   onLabelCreate: PropTypes.func.isRequired,

@@ -1,0 +1,110 @@
+diff --git a/client/src/selectors/board.js b/client/src/selectors/board.js
+index 740a19d..7e7c0a2 100644
+--- a/client/src/selectors/board.js
++++ b/client/src/selectors/board.js
+@@ -90,6 +90,27 @@ export const labelsForCurrentBoardSelector = createSelector(
+   },
+ );
+ 
++export const punctuationsForCurrentBoardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).boardId,
++  ({ Board }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const boardModel = Board.withId(id);
++
++    if (!boardModel) {
++      return boardModel;
++    }
++
++    return boardModel.punctuations.toRefArray().map((punctuation) => ({
++      ...punctuation,
++      isPersisted: !isLocalId(punctuation.id),
++    }));
++  },
++);
++
+ export const listIdsForCurrentBoardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).boardId,
+@@ -147,6 +168,24 @@ export const filterLabelsForCurrentBoardSelector = createSelector(
+   },
+ );
+ 
++export const filterPunctuationsForCurrentBoardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).boardId,
++  ({ Board }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const boardModel = Board.withId(id);
++
++    if (!boardModel) {
++      return boardModel;
++    }
++
++    return boardModel.filterPunctuations.toRefArray();
++  },
++);
++
+ export const isCurrentUserMemberForCurrentBoardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).boardId,
+diff --git a/client/src/selectors/card.js b/client/src/selectors/card.js
+index dd7de70..6dc0eae 100644
+--- a/client/src/selectors/card.js
++++ b/client/src/selectors/card.js
+@@ -60,6 +60,23 @@ export const makeLabelsByCardIdSelector = () =>
+ 
+ export const labelsByCardIdSelector = makeLabelsByCardIdSelector();
+ 
++export const makePunctuationsByCardIdSelector = () =>
++  createSelector(
++    orm,
++    (_, id) => id,
++    ({ Card }, id) => {
++      const cardModel = Card.withId(id);
++
++      if (!cardModel) {
++        return cardModel;
++      }
++
++      return cardModel.punctuations.toRefArray();
++    },
++  );
++
++export const punctuationsByCardIdSelector = makePunctuationsByCardIdSelector();
++
+ export const makeTasksByCardIdSelector = () =>
+   createSelector(
+     orm,
+@@ -184,6 +201,24 @@ export const labelsForCurrentCardSelector = createSelector(
+   },
+ );
+ 
++export const punctuationsForCurrentCardSelector = createSelector(
++  orm,
++  (state) => pathSelector(state).cardId,
++  ({ Card }, id) => {
++    if (!id) {
++      return id;
++    }
++
++    const cardModel = Card.withId(id);
++
++    if (!cardModel) {
++      return cardModel;
++    }
++
++    return cardModel.punctuations.toRefArray();
++  },
++);
++
+ export const tasksForCurrentCardSelector = createSelector(
+   orm,
+   (state) => pathSelector(state).cardId,

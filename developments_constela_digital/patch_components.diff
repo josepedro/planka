@@ -1,0 +1,547 @@
+diff --git a/client/src/components/BoardActions/BoardActions.jsx b/client/src/components/BoardActions/BoardActions.jsx
+index 5745629..f46b444 100644
+--- a/client/src/components/BoardActions/BoardActions.jsx
++++ b/client/src/components/BoardActions/BoardActions.jsx
+@@ -9,8 +9,10 @@ import styles from './BoardActions.module.scss';
+ const BoardActions = React.memo(
+   ({
+     memberships,
++    punctuations,
+     labels,
+     filterUsers,
++    filterPunctuations,
+     filterLabels,
+     allUsers,
+     canEditMemberships,
+@@ -18,6 +20,11 @@ const BoardActions = React.memo(
+     onMembershipDelete,
+     onUserToFilterAdd,
+     onUserFromFilterRemove,
++    onPunctuationToFilterAdd,
++    onPunctuationFromFilterRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelToFilterAdd,
+     onLabelFromFilterRemove,
+     onLabelCreate,
+@@ -38,11 +45,18 @@ const BoardActions = React.memo(
+         <div className={styles.action}>
+           <Filters
+             users={filterUsers}
++            punctuations={filterPunctuations}
+             labels={filterLabels}
+             allBoardMemberships={memberships}
++            allPunctuations={punctuations}
+             allLabels={labels}
+             onUserAdd={onUserToFilterAdd}
+             onUserRemove={onUserFromFilterRemove}
++            onPunctuationAdd={onPunctuationToFilterAdd}
++            onPunctuationRemove={onPunctuationFromFilterRemove}
++            onPunctuationCreate={onPunctuationCreate}
++            onPunctuationUpdate={onPunctuationUpdate}
++            onPunctuationDelete={onPunctuationDelete}
+             onLabelAdd={onLabelToFilterAdd}
+             onLabelRemove={onLabelFromFilterRemove}
+             onLabelCreate={onLabelCreate}
+@@ -58,8 +72,10 @@ const BoardActions = React.memo(
+ BoardActions.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   memberships: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   filterUsers: PropTypes.array.isRequired,
++  filterPunctuations: PropTypes.array.isRequired,
+   filterLabels: PropTypes.array.isRequired,
+   allUsers: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+@@ -68,6 +84,11 @@ BoardActions.propTypes = {
+   onMembershipDelete: PropTypes.func.isRequired,
+   onUserToFilterAdd: PropTypes.func.isRequired,
+   onUserFromFilterRemove: PropTypes.func.isRequired,
++  onPunctuationToFilterAdd: PropTypes.func.isRequired,
++  onPunctuationFromFilterRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelToFilterAdd: PropTypes.func.isRequired,
+   onLabelFromFilterRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/BoardActions/Filters.jsx b/client/src/components/BoardActions/Filters.jsx
+index 621c735..7c13983 100644
+--- a/client/src/components/BoardActions/Filters.jsx
++++ b/client/src/components/BoardActions/Filters.jsx
+@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
+ import { useTranslation } from 'react-i18next';
+ 
+ import User from '../User';
++import Punctuation from '../Punctuation';
+ import Label from '../Label';
+ import BoardMembershipsPopup from '../BoardMembershipsPopup';
++import PunctuationsPopup from '../PunctuationsPopup';
+ import LabelsPopup from '../LabelsPopup';
+ 
+ import styles from './Filters.module.scss';
+@@ -12,11 +14,18 @@ import styles from './Filters.module.scss';
+ const Filters = React.memo(
+   ({
+     users,
++    punctuations,
+     labels,
+     allBoardMemberships,
++    allPunctuations,
+     allLabels,
+     onUserAdd,
+     onUserRemove,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -39,6 +48,13 @@ const Filters = React.memo(
+       [onLabelRemove],
+     );
+ 
++    const handleRemovePunctuationClick = useCallback(
++      (id) => {
++        onPunctuationRemove(id);
++      },
++      [onPunctuationRemove],
++    );
++
+     return (
+       <>
+         <span className={styles.filter}>
+@@ -96,6 +112,37 @@ const Filters = React.memo(
+             </span>
+           ))}
+         </span>
++        <span className={styles.filter}>
++          <PunctuationsPopup
++            items={allPunctuations}
++            currentIds={punctuations.map((punctuation) => punctuation.id)}
++            title={t('common.filterByPunctuations', {
++              context: 'title',
++            })}
++            onSelect={onPunctuationAdd}
++            onDeselect={onPunctuationRemove}
++            onCreate={onPunctuationCreate}
++            onUpdate={onPunctuationUpdate}
++            onDelete={onPunctuationDelete}
++          >
++            <button type="button" className={styles.filterButton}>
++              <span className={styles.filterTitle}>{`${t('common.punctuations')}:`}</span>
++              {punctuations.length === 0 && (
++                <span className={styles.filterLabel}>{t('common.all')}</span>
++              )}
++            </button>
++          </PunctuationsPopup>
++          {punctuations.map((punctuation) => (
++            <span key={punctuation.id} className={styles.filterItem}>
++              <Punctuation
++                name={punctuation.name}
++                color={punctuation.color}
++                size="small"
++                onClick={() => handleRemovePunctuationClick(punctuation.id)}
++              />
++            </span>
++          ))}
++        </span>
+       </>
+     );
+   },
+@@ -104,12 +151,19 @@ const Filters = React.memo(
+ Filters.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/Card/ActionsPopup.jsx b/client/src/components/Card/ActionsPopup.jsx
+index 3b2a7e0..69f4e0a 100644
+--- a/client/src/components/Card/ActionsPopup.jsx
++++ b/client/src/components/Card/ActionsPopup.jsx
+@@ -9,6 +9,7 @@ import { Popup } from '../../lib/custom-ui';
+ import { useSteps } from '../../hooks';
+ import BoardMembershipsStep from '../BoardMembershipsStep';
+ import LabelsStep from '../LabelsStep';
++import PunctuationsStep from '../PunctuationsStep';
+ import DueDateEditStep from '../DueDateEditStep';
+ import TimerEditStep from '../TimerEditStep';
+ import CardMoveStep from '../CardMoveStep';
+@@ -18,6 +19,7 @@ import styles from './ActionsPopup.module.scss';
+ 
+ const StepTypes = {
+   USERS: 'USERS',
++  PUNCTUATIONS: 'PUNCTUATIONS',
+   LABELS: 'LABELS',
+   EDIT_DUE_DATE: 'EDIT_DUE_DATE',
+   EDIT_TIMER: 'EDIT_TIMER',
+@@ -31,7 +33,9 @@ const ActionsStep = React.memo(
+     projectsToLists,
+     boardMemberships,
+     currentUserIds,
++    punctuations,
+     labels,
++    currentPunctuationIds,
+     currentLabelIds,
+     onNameEdit,
+     onUpdate,
+@@ -41,6 +45,11 @@ const ActionsStep = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -60,6 +69,10 @@ const ActionsStep = React.memo(
+       openStep(StepTypes.USERS);
+     }, [openStep]);
+ 
++    const handlePunctuationsClick = useCallback(() => {
++      openStep(StepTypes.PUNCTUATIONS);
++    }, [openStep]);
++
+     const handleLabelsClick = useCallback(() => {
+       openStep(StepTypes.LABELS);
+     }, [openStep]);
+@@ -110,6 +123,19 @@ const ActionsStep = React.memo(
+               onBack={handleBack}
+             />
+           );
++        case StepTypes.PUNCTUATIONS:
++          return (
++            <PunctuationsStep
++              items={punctuations}
++              currentIds={currentPunctuationIds}
++              onSelect={onPunctuationAdd}
++              onDeselect={onPunctuationRemove}
++              onCreate={onPunctuationCreate}
++              onUpdate={onPunctuationUpdate}
++              onDelete={onPunctuationDelete}
++              onBack={handleBack}
++            />
++          );
+         case StepTypes.LABELS:
+           return (
+             <LabelsStep
+@@ -188,6 +214,11 @@ const ActionsStep = React.memo(
+                 context: 'title',
+               })}
+             </Menu.Item>
++            <Menu.Item className={styles.menuItem} onClick={handlePunctuationsClick}>
++              {t('common.punctuations', {
++                context: 'title',
++              })}
++            </Menu.Item>
+             <Menu.Item className={styles.menuItem} onClick={handleLabelsClick}>
+               {t('common.labels', {
+                 context: 'title',
+@@ -226,6 +257,8 @@ ActionsStep.propTypes = {
+   projectsToLists: PropTypes.array.isRequired,
+   boardMemberships: PropTypes.array.isRequired,
+   currentUserIds: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
++  currentPunctuationIds: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
+   currentLabelIds: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+@@ -237,6 +270,11 @@ ActionsStep.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/Card/Card.jsx b/client/src/components/Card/Card.jsx
+index 262b09b..8a83665 100755
+--- a/client/src/components/Card/Card.jsx
++++ b/client/src/components/Card/Card.jsx
+@@ -11,6 +11,7 @@ import NameEdit from './NameEdit';
+ import ActionsPopup from './ActionsPopup';
+ import User from '../User';
+ import Label from '../Label';
++import Punctuation from '../Punctuation';
+ import DueDate from '../DueDate';
+ import Timer from '../Timer';
+ 
+@@ -31,10 +32,12 @@ const Card = React.memo(
+     notificationsTotal,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     allProjectsToLists,
+     allBoardMemberships,
+     allLabels,
++    allPunctuations,
+     canEdit,
+     onUpdate,
+     onMove,
+@@ -43,6 +46,11 @@ const Card = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -86,6 +94,18 @@ const Card = React.memo(
+               ))}
+             </span>
+           )}
++          {punctuations.length > 0 && (
++            <span className={styles.labels}>
++              {punctuations.map((punctuation) => (
++                <span
++                  key={punctuation.id}
++                  className={classNames(styles.attachment, styles.attachmentLeft)}
++                >
++                  <Punctuation name={punctuation.name} color={punctuation.color} size="tiny" />
++                </span>
++              ))}
++            </span>
++          )}
+           <div className={styles.name}>{name}</div>
+           {tasks.length > 0 && <Tasks items={tasks} />}
+           {(dueDate || timer || notificationsTotal > 0) && (
+@@ -160,6 +180,8 @@ const Card = React.memo(
+                         projectsToLists={allProjectsToLists}
+                         boardMemberships={allBoardMemberships}
+                         currentUserIds={users.map((user) => user.id)}
++                        punctuations={allPunctuations}
++                        currentPunctuationsIds={punctuations.map((punctuation) => punctuation.id)}
+                         labels={allLabels}
+                         currentLabelIds={labels.map((label) => label.id)}
+                         onNameEdit={handleNameEdit}
+@@ -170,6 +192,11 @@ const Card = React.memo(
+                         onUserAdd={onUserAdd}
+                         onUserRemove={onUserRemove}
+                         onBoardFetch={onBoardFetch}
++                        onPunctuationAdd={onPunctuationAdd}
++                        onPunctuationRemove={onPunctuationRemove}
++                        onPunctuationCreate={onPunctuationCreate}
++                        onPunctuationUpdate={onPunctuationUpdate}
++                        onPunctuationDelete={onPunctuationDelete}
+                         onLabelAdd={onLabelAdd}
+                         onLabelRemove={onLabelRemove}
+                         onLabelCreate={onLabelCreate}
+@@ -209,10 +236,12 @@ Card.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   tasks: PropTypes.array.isRequired,
+   allProjectsToLists: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   canEdit: PropTypes.bool.isRequired,
+   onUpdate: PropTypes.func.isRequired,
+@@ -222,6 +251,11 @@ Card.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,
+diff --git a/client/src/components/CardModal/CardModal.jsx b/client/src/components/CardModal/CardModal.jsx
+index 9b6f100..e197fba 100755
+--- a/client/src/components/CardModal/CardModal.jsx
++++ b/client/src/components/CardModal/CardModal.jsx
+@@ -18,6 +18,7 @@ import DueDate from '../DueDate';
+ import Timer from '../Timer';
+ import BoardMembershipsPopup from '../BoardMembershipsPopup';
+ import LabelsPopup from '../LabelsPopup';
++import PunctuationsPopup from '../PunctuationsPopup';
+ import DueDateEditPopup from '../DueDateEditPopup';
+ import TimerEditPopup from '../TimerEditPopup';
+ import CardMovePopup from '../CardMovePopup';
+@@ -39,12 +40,14 @@ const CardModal = React.memo(
+     projectId,
+     users,
+     labels,
++    punctuations,
+     tasks,
+     attachments,
+     actions,
+     allProjectsToLists,
+     allBoardMemberships,
+     allLabels,
++    allPunctuations,
+     canEdit,
+     canEditAllCommentActions,
+     onUpdate,
+@@ -54,6 +57,11 @@ const CardModal = React.memo(
+     onUserAdd,
+     onUserRemove,
+     onBoardFetch,
++    onPunctuationAdd,
++    onPunctuationRemove,
++    onPunctuationCreate,
++    onPunctuationUpdate,
++    onPunctuationDelete,
+     onLabelAdd,
+     onLabelRemove,
+     onLabelCreate,
+@@ -126,6 +134,7 @@ const CardModal = React.memo(
+ 
+     const userIds = users.map((user) => user.id);
+     const labelIds = labels.map((label) => label.id);
++    const punctuationIds = punctuations.map((punctuation) => punctuation.id);
+ 
+     const contentNode = (
+       <Grid className={styles.grid}>
+@@ -145,7 +154,11 @@ const CardModal = React.memo(
+         </Grid.Row>
+         <Grid.Row className={styles.modalPadding}>
+           <Grid.Column width={canEdit ? 12 : 16} className={styles.contentPadding}>
+-            {(users.length > 0 || labels.length > 0 || dueDate || timer) && (
++            {(users.length > 0 ||
++              labels.length > 0 ||
++              punctuations.length > 0 ||
++              dueDate ||
++              timer) && (
+               <div className={styles.moduleWrapper}>
+                 {users.length > 0 && (
+                   <div className={styles.attachments}>
+@@ -234,6 +247,53 @@ const CardModal = React.memo(
+                     )}
+                   </div>
+                 )}
++                {punctuations.length > 0 && (
++                  <div className={styles.attachments}>
++                    <div className={styles.text}>
++                      {t('common.punctuations', {
++                        context: 'title',
++                      })}
++                    </div>
++                    {punctuations.map((punctuation) => (
++                      <span key={punctuation.id} className={styles.attachment}>
++                        {canEdit ? (
++                          <PunctuationsPopup
++                            key={punctuation.id}
++                            items={allPunctuations}
++                            currentIds={punctuationIds}
++                            onSelect={onPunctuationAdd}
++                            onDeselect={onPunctuationRemove}
++                            onCreate={onPunctuationCreate}
++                            onUpdate={onPunctuationUpdate}
++                            onDelete={onPunctuationDelete}
++                          >
++                            <Label name={punctuation.name} color={punctuation.color} />
++                          </PunctuationsPopup>
++                        ) : (
++                          <Label name={punctuation.name} color={punctuation.color} />
++                        )}
++                      </span>
++                    ))}
++                    {canEdit && (
++                      <PunctuationsPopup
++                        items={allPunctuations}
++                        currentIds={punctuationIds}
++                        onSelect={onPunctuationAdd}
++                        onDeselect={onPunctuationRemove}
++                        onCreate={onPunctuationCreate}
++                        onUpdate={onPunctuationUpdate}
++                        onDelete={onPunctuationDelete}
++                      >
++                        <button
++                          type="button"
++                          className={classNames(styles.attachment, styles.dueDate)}
++                        >
++                          <Icon name="add" size="small" className={styles.addAttachment} />
++                        </button>
++                      </PunctuationsPopup>
++                    )}
++                  </div>
++                )}
+                 {dueDate && (
+                   <div className={styles.attachments}>
+                     <div className={styles.text}>
+@@ -348,6 +408,22 @@ const CardModal = React.memo(
+             <Grid.Column width={4} className={styles.sidebarPadding}>
+               <div className={styles.actions}>
+                 <span className={styles.actionsTitle}>{t('action.addToCard')}</span>
++
++                <PunctuationsPopup
++                  items={allPunctuations}
++                  currentIds={punctuationIds}
++                  onSelect={onPunctuationAdd}
++                  onDeselect={onPunctuationRemove}
++                  onCreate={onPunctuationCreate}
++                  onUpdate={onPunctuationUpdate}
++                  onDelete={onPunctuationDelete}
++                >
++                  <Button fluid className={styles.actionButton}>
++                    <Icon name="bookmark" className={styles.actionIcon} />
++                    {t('Punctuation')}
++                  </Button>
++                </PunctuationsPopup>
++
+                 <BoardMembershipsPopup
+                   items={allBoardMemberships}
+                   currentUserIds={userIds}
+@@ -470,12 +546,14 @@ CardModal.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+   users: PropTypes.array.isRequired,
+   labels: PropTypes.array.isRequired,
++  punctuations: PropTypes.array.isRequired,
+   tasks: PropTypes.array.isRequired,
+   attachments: PropTypes.array.isRequired,
+   actions: PropTypes.array.isRequired,
+   allProjectsToLists: PropTypes.array.isRequired,
+   allBoardMemberships: PropTypes.array.isRequired,
+   allLabels: PropTypes.array.isRequired,
++  allPunctuations: PropTypes.array.isRequired,
+   /* eslint-enable react/forbid-prop-types */
+   canEdit: PropTypes.bool.isRequired,
+   canEditAllCommentActions: PropTypes.bool.isRequired,
+@@ -486,6 +564,11 @@ CardModal.propTypes = {
+   onUserAdd: PropTypes.func.isRequired,
+   onUserRemove: PropTypes.func.isRequired,
+   onBoardFetch: PropTypes.func.isRequired,
++  onPunctuationAdd: PropTypes.func.isRequired,
++  onPunctuationRemove: PropTypes.func.isRequired,
++  onPunctuationCreate: PropTypes.func.isRequired,
++  onPunctuationUpdate: PropTypes.func.isRequired,
++  onPunctuationDelete: PropTypes.func.isRequired,
+   onLabelAdd: PropTypes.func.isRequired,
+   onLabelRemove: PropTypes.func.isRequired,
+   onLabelCreate: PropTypes.func.isRequired,

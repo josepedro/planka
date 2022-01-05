@@ -18,6 +18,7 @@ import DueDate from '../DueDate';
 import Timer from '../Timer';
 import BoardMembershipsPopup from '../BoardMembershipsPopup';
 import LabelsPopup from '../LabelsPopup';
+import PunctuationsPopup from '../PunctuationsPopup';
 import DueDateEditPopup from '../DueDateEditPopup';
 import TimerEditPopup from '../TimerEditPopup';
 import CardMovePopup from '../CardMovePopup';
@@ -39,12 +40,14 @@ const CardModal = React.memo(
     projectId,
     users,
     labels,
+    punctuations,
     tasks,
     attachments,
     actions,
     allProjectsToLists,
     allBoardMemberships,
     allLabels,
+    allPunctuations,
     canEdit,
     canEditAllCommentActions,
     onUpdate,
@@ -54,6 +57,11 @@ const CardModal = React.memo(
     onUserAdd,
     onUserRemove,
     onBoardFetch,
+    onPunctuationAdd,
+    onPunctuationRemove,
+    onPunctuationCreate,
+    onPunctuationUpdate,
+    onPunctuationDelete,
     onLabelAdd,
     onLabelRemove,
     onLabelCreate,
@@ -126,6 +134,7 @@ const CardModal = React.memo(
 
     const userIds = users.map((user) => user.id);
     const labelIds = labels.map((label) => label.id);
+    const punctuationIds = punctuations.map((punctuation) => punctuation.id);
 
     const contentNode = (
       <Grid className={styles.grid}>
@@ -145,7 +154,11 @@ const CardModal = React.memo(
         </Grid.Row>
         <Grid.Row className={styles.modalPadding}>
           <Grid.Column width={canEdit ? 12 : 16} className={styles.contentPadding}>
-            {(users.length > 0 || labels.length > 0 || dueDate || timer) && (
+            {(users.length > 0 ||
+              labels.length > 0 ||
+              punctuations.length > 0 ||
+              dueDate ||
+              timer) && (
               <div className={styles.moduleWrapper}>
                 {users.length > 0 && (
                   <div className={styles.attachments}>
@@ -231,6 +244,53 @@ const CardModal = React.memo(
                           <Icon name="add" size="small" className={styles.addAttachment} />
                         </button>
                       </LabelsPopup>
+                    )}
+                  </div>
+                )}
+                {punctuations.length > 0 && (
+                  <div className={styles.attachments}>
+                    <div className={styles.text}>
+                      {t('common.punctuations', {
+                        context: 'title',
+                      })}
+                    </div>
+                    {punctuations.map((punctuation) => (
+                      <span key={punctuation.id} className={styles.attachment}>
+                        {canEdit ? (
+                          <PunctuationsPopup
+                            key={punctuation.id}
+                            items={allPunctuations}
+                            currentIds={punctuationIds}
+                            onSelect={onPunctuationAdd}
+                            onDeselect={onPunctuationRemove}
+                            onCreate={onPunctuationCreate}
+                            onUpdate={onPunctuationUpdate}
+                            onDelete={onPunctuationDelete}
+                          >
+                            <Label name={punctuation.name} color={punctuation.color} />
+                          </PunctuationsPopup>
+                        ) : (
+                          <Label name={punctuation.name} color={punctuation.color} />
+                        )}
+                      </span>
+                    ))}
+                    {canEdit && (
+                      <PunctuationsPopup
+                        items={allPunctuations}
+                        currentIds={punctuationIds}
+                        onSelect={onPunctuationAdd}
+                        onDeselect={onPunctuationRemove}
+                        onCreate={onPunctuationCreate}
+                        onUpdate={onPunctuationUpdate}
+                        onDelete={onPunctuationDelete}
+                      >
+                        <button
+                          type="button"
+                          className={classNames(styles.attachment, styles.dueDate)}
+                        >
+                          <Icon name="add" size="small" className={styles.addAttachment} />
+                        </button>
+                      </PunctuationsPopup>
                     )}
                   </div>
                 )}
@@ -348,6 +408,22 @@ const CardModal = React.memo(
             <Grid.Column width={4} className={styles.sidebarPadding}>
               <div className={styles.actions}>
                 <span className={styles.actionsTitle}>{t('action.addToCard')}</span>
+
+                <PunctuationsPopup
+                  items={allPunctuations}
+                  currentIds={punctuationIds}
+                  onSelect={onPunctuationAdd}
+                  onDeselect={onPunctuationRemove}
+                  onCreate={onPunctuationCreate}
+                  onUpdate={onPunctuationUpdate}
+                  onDelete={onPunctuationDelete}
+                >
+                  <Button fluid className={styles.actionButton}>
+                    <Icon name="bookmark" className={styles.actionIcon} />
+                    {t('Punctuation')}
+                  </Button>
+                </PunctuationsPopup>
+
                 <BoardMembershipsPopup
                   items={allBoardMemberships}
                   currentUserIds={userIds}
@@ -470,12 +546,14 @@ CardModal.propTypes = {
   /* eslint-disable react/forbid-prop-types */
   users: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired,
+  punctuations: PropTypes.array.isRequired,
   tasks: PropTypes.array.isRequired,
   attachments: PropTypes.array.isRequired,
   actions: PropTypes.array.isRequired,
   allProjectsToLists: PropTypes.array.isRequired,
   allBoardMemberships: PropTypes.array.isRequired,
   allLabels: PropTypes.array.isRequired,
+  allPunctuations: PropTypes.array.isRequired,
   /* eslint-enable react/forbid-prop-types */
   canEdit: PropTypes.bool.isRequired,
   canEditAllCommentActions: PropTypes.bool.isRequired,
@@ -486,6 +564,11 @@ CardModal.propTypes = {
   onUserAdd: PropTypes.func.isRequired,
   onUserRemove: PropTypes.func.isRequired,
   onBoardFetch: PropTypes.func.isRequired,
+  onPunctuationAdd: PropTypes.func.isRequired,
+  onPunctuationRemove: PropTypes.func.isRequired,
+  onPunctuationCreate: PropTypes.func.isRequired,
+  onPunctuationUpdate: PropTypes.func.isRequired,
+  onPunctuationDelete: PropTypes.func.isRequired,
   onLabelAdd: PropTypes.func.isRequired,
   onLabelRemove: PropTypes.func.isRequired,
   onLabelCreate: PropTypes.func.isRequired,
